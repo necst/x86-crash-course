@@ -1,0 +1,795 @@
+\documentclass[]{beamer}
+% Class options include: notes, notesonly, handout, trans,
+%                        hidesubsections, shadesubsections,
+%                        inrow, blue, red, grey, brown
+
+% Theme for beamer presentation.
+\usepackage{beamerthemesplit} 
+\usepackage{tabularx}
+\usepackage{epstopdf}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{subfig}
+\usepackage{tipa}
+\usepackage{mathptmx}
+\usepackage[11pt]{moresize}
+\usepackage{tikz}
+
+\makeatletter
+
+\def\hlinewd#1{%
+\noalign{\ifnum0=`}\fi\hrule \@height #1 %
+\futurelet\reserved@a\@xhline}
+\makeatother
+
+
+\newcommand*{\yellowemph}[1]{%
+  \tikz\node[rectangle, fill=yellow, rounded corners, inner sep=0.3mm]{#1};%
+}
+
+\newenvironment{changemargin}[2]{%
+  \begin{list}{}{%
+    \setlength{\topsep}{0pt}%
+    \setlength{\leftmargin}{#1}%
+    \setlength{\rightmargin}{#2}%
+    \setlength{\listparindent}{\parindent}%
+    \setlength{\itemindent}{\parindent}%
+    \setlength{\parsep}{\parskip}%
+  }%
+  \item[]}{\end{list}} 
+% Other themes include: beamerthemebars, beamerthemelined, 
+%                       beamerthemetree, beamerthemetreebars  
+\newcommand{\tab}{\hspace*{2em}}
+\newcommand*\oldmacro{}%
+\let\oldmacro\insertshorttitle%
+\renewcommand*\insertshorttitle{%
+  \oldmacro\hfill%
+  \insertframenumber\,/\,\inserttotalframenumber}
+\title{Exploiting Introduction}    % Enter your title between curly braces
+\author[M. Polino]{Mario Polino (mario.polino@polimi.it)}        % Enter your name between curly braces
+\institute{Politecnico di Milano\\ \vspace{1cm} Special thanks to Andrea Mambretti}      % Enter your institute name between curly braces
+\date{\today}                    % Enter the date or \today between curly braces
+
+\begin{document}
+
+% Creates title page of slide show using above information
+\begin{frame}
+  \titlepage
+\end{frame}
+\note{Talk for 50 minutes} % Add notes to yourself that will be displayed when
+                           % typeset with the notes or notesonly class options
+
+\section[Outline]{}
+
+% Creates table of contents slide incorporating
+% all \section and \subsection commands
+\begin{frame}
+  \tableofcontents
+\end{frame}
+\section {Crash course on Assembly Language}
+	\subsection{Overview on the common 32-bit Intel Architecture (IA)}
+		\begin{frame}
+			\frametitle{(1) How does IA look like?}
+			\begin{itemize}
+				\item{The processor has 32-bits internal registers to manage and execute operations on data\newline They are EAX, EBX, ECX, EDX, ESI, EDI, EBP, EIP and ESP }
+				\item{Among them EAX, EBX, ECX, EDX are for general purposes}
+				\item{EBP (BP = base pointer) and ESP (SP = stack pointer) are the stack bounds (see slide 24)}
+				\item{EDI and ESI are extra registers}
+				\item{EIP (IP = instruction pointer) is the register that contains the address of the next instruction}
+			\end{itemize}
+		\end{frame}
+		\begin{frame}
+			\frametitle{(2) How does AI look like?}
+			\begin{columns}
+				\begin{column}{2.5in}
+					\begin{figure}
+						\includegraphics[height=1.6in]{images/registers.jpeg}
+						\label{Registers Division}
+					\end{figure}
+				\end{column}
+				\begin{column}{2.5in}
+					\begin{itemize}
+							\item{The register name system is a porting from 16-bits IA where the registers were called AX, BX and so on.\newline \textbf{E} means extended. Without it we consider the corrisponding 16-bits register}
+					\end{itemize}
+				\end{column}
+			\end{columns}
+		\end{frame}
+
+		\begin{frame}
+			\frametitle{(1) What about EFLAGS?}
+			\begin{figure}
+				\includegraphics[height=2.5in]{images/eflags.jpeg}
+				\label{Eflags idea}
+			\end{figure}
+		\end{frame}
+		\begin{frame}
+			\frametitle{(2) What about EFLAGS?}
+			\begin{itemize}
+				\item{It's another 32-bits register}
+				\item{Only 8 bits out of 32 are of interest for us. The others are either for the kernel mode function or  are of little interest for programmers}
+				\item{These 8 bits are called flags. We consider them singularly. They are boolean (true/false) }
+				\item{They represent overflow, direction, interrupt disable, sign, zero, auxiliary carry, parity and carry flags}
+				\item{Since they represent information about the instruction last executed, they change at every execution step. They are VERY important for the control flow of the program (see slide 18)}				
+			\end{itemize}
+		\end{frame}
+	\subsection{Overview on different syntaxes}
+		\begin{frame}
+			\frametitle{Syntax}
+			\begin{itemize}
+				\item{In the assembly world we can find two main syntaxes: the AT\&T and the Intel}
+				\item{AT\&T syntax is used by all UNIX program (e.g. gdb)}
+				\item{Intel syntax is used by Microsoft programs (IDApro and others)}
+			\end{itemize}
+		\end{frame}
+		\begin{frame}
+			\frametitle{(1) Differences in the notation}
+			\begin{itemize}
+				\item{Consider the following operation:\newline\centerline{"move the value 0 to EAX"}}
+				\item{AT\&T: \centerline{ mov \$0x0,\%eax} }
+				\item{Intel: \centerline{ mov eax, 0h}}
+				\item{Comments:} 
+				\begin{itemize}
+					\item{As you can see in AT\&T syntax the destination is the second operand instead as in the Intel syntax}
+					\item{In the AT\&T syntax the register are denoted with \% and the [immediate \textpipe{} costant] with \$. In the Intel syntax these tokens are not used. }
+				\end{itemize}
+			\end{itemize}
+		\end{frame}
+		\begin{frame}
+			\frametitle{(2) Differences in the notation}
+			\begin{itemize}
+				\item{Consider this new operation:\newline\centerline {"move the value 0 to the address contained in EBX+4"}}
+				\item{AT\&T: \centerline{ mov \$0x0,0x4(\%ebx)}}
+				\item{Intel: \centerline{ mov [ebx+4h],0h }}
+				\item{Comments:}
+				\begin{itemize}
+					\item{This case shows how  the deferentiation is done in assembly}
+					\item{In AT\&T we use parentheses. In the Intel syntax we have to use square brackets}
+					\item{The way to manage the offset is another syntax difference. In the first case we have to put it out of parentheses in the second one inside the square brackets }
+				\end{itemize}
+			\end{itemize}
+		\end{frame}
+	\subsection{Basic Instructions}
+		\begin{frame}
+			\frametitle{(1) Basic instructions overview}
+				\begin{itemize}
+					\item{Every processor has a huge instruction set (see Intel Manual\footnote{\url{http://www.intel.com/content/www/us/en/processors/architectures-software-developer-manuals.html}})}
+					\item{A subset of the whole instruction set is usually processor dependent}
+					\item{We will focus on the subset of instructions that is common among the processors}
+					\item{We will use the Intel syntax as it is the same syntax used in IDApro by default}
+				\end{itemize}
+		\end{frame}
+		\begin{frame}
+			\frametitle{(2) Basic Instruction MOV}
+				\begin{itemize}	
+					\item{ General: MOV \underline{\textbf{destination}}, \underline{\textbf{source}}}\\
+					\textbf{source} can be an immediate, a register, a memory location\\
+					\textbf{destination} can be either a register  or a memory location\\
+					NB: Every combination is possible except memloc to memloc!!!It is invalid in every instruction!!!
+
+					\item{With this instruction, as said in the example above, we move a value from a source place to a destination. There are a ton of different versions. They change depending on the operands ex 32 bits operands, 16 bits operands, immediate to reg, immediate to memory }
+				\item{Examples}
+					\begin{table}[h]
+						\begin{tabular}{|c|c|c|}
+							\hline
+							MOV eax, ebx&MOV eax, FFFFFFFFh &MOV ax, bx\\    \hline
+							MOV [eax],ecx&MOV [eax],[ecx] \color{red}NO!!!&MOV al, FFh\\
+							\hline
+						\end{tabular}
+					\end{table}
+			\end{itemize}	
+
+		\end{frame}
+		\begin{frame}
+			\frametitle{(3) Basic Instruction ADD}
+			\begin{itemize}
+					\item{General: ADD \underline{\textbf{destination}}, \underline{\textbf{source}}}\\
+					\textbf{source} can be an immediate, a register, a memory location\\
+					\textbf{destination} can be either a register or a memory location\\
+					NB: The destination register has to be as big as the source or greater 
+					\item{With this instruction we can add a value from \textbf{source}  to the destination operand and put the new value inside the destination (dest = dest + src)}
+					\item{Examples}
+					\begin{table}[h]
+						\begin{tabular}{|c|c|c|}
+							\hline
+							ADD esp, 44h&ADD eax, ebx&ADD al, dh\\
+							\hline
+							ADD  edx, cx&ADD [eax],[ecx] \color{red}NO!!!&ADD [eax],1h\\
+							\hline
+						\end{tabular}
+					\end{table}
+
+			\end{itemize}
+		\end{frame}
+		\begin{frame}
+			\frametitle{(4) Basic Instruction SUB}
+			\begin{itemize}
+				\item{General: SUB \underline{\textbf{destination}}, \underline{\textbf{source}}}\\
+				\textbf{source} can be an immediate, a register, a memory location\\
+				\textbf{destination} can be either a register or a memory location\\
+					NB: The destination register has to be as big as the source or greater 
+				\item{With this instruction we can subtract the value \textbf{source}  from the destination operand and put the new value inside the destination (dest = dest - src)}
+
+				\item{Examples}
+					\begin{table}[h]
+						\begin{tabular}{|c|c|c|}
+							\hline
+							SUB esp, 33h&SUB eax, ebx&SUB al, dh\\
+							\hline
+							SUB edx, cx&SUB [eax],[ecx] \color{red}NO!!!&SUB [eax],1h\\
+							\hline
+						\end{tabular}
+					\end{table}
+
+			\end{itemize}
+		\end{frame}
+		\begin{frame}
+			\frametitle{(5) Basic Instruction MUL}
+			\begin{itemize}
+				\item{General: MUL \underline{\textbf{Operand}}}\\
+				\textbf{Operand} can be an immediate, a register, a memory location\\
+
+				\item{With this instruction we can multiply \textbf{Operand} by the value of corresponding byte-length in the EAX,AX,AL register }
+					\begin{table}[h]
+						\begin{tabular}{|c!{\vrule width 1pt}c|c|c| }
+							\hline
+							OperandSize:& 1 byte & 2 bytes& 4 bytes\\	\hlinewd{1.3pt}
+								Other Operand& AL     & AX   & EAX\\	\hline
+							Higher Part of result: & AH & DX & EDX\\		\hline
+							Lower Part of result:  & AL & AX & EAX\\
+							\hline
+						\end{tabular}
+					\end{table}
+
+					\item{Examples}
+					\begin{table}[h]	
+						\begin{tabular}{|c!{\vrule width 1pt}c|c|c|}
+							\hline
+							OperandSize:&1 byte & 2 bytes & 4 bytes\\ \hlinewd{1.3pt}
+
+							Immediate&MUL 44h & MUL 4455h & MUL 44556677h\\ \hline
+							Register&MUL cl & MUL dx & MUL ebx \\
+							\hline
+						\end{tabular}
+					\end{table}
+			\end{itemize}
+		\end{frame}
+
+		\begin{frame}
+			\frametitle{(6) Basic Instruction DIV}
+			\begin{itemize}	
+				\item{General: DIV \underline{\textbf{Operand}}}\\
+				\textbf{Operand} can be an immediate, a register, a memory location
+
+				\item{With this instruction we can divide the value in the dividend register(s) by "Operand"}
+					\begin{table}[h]
+						\begin{tabular}{|c!{\vrule width 1pt}c|c|c| }
+							\hline
+							OperandSize: & 1 byte & 2 bytes & 4 bytes\\	\hlinewd{1.3pt}
+							Dividend     & AX     & DX:AX   & EDX:EAX\\	\hline
+							Remainder  & AH & DX & EDX\\		\hline
+							Quotient  & AL & AX & EAX\\							\hline
+						\end{tabular}
+					\end{table}
+					\item{Examples}
+					\begin{table}[h]	
+						\begin{tabular}{|c!{\vrule width 1pt}c|c|c|}
+							\hline
+							OperandSize:&1 byte & 2 bytes & 4 bytes\\ \hlinewd{1.3pt}
+							Register&DIV bl & DIV bx & DIV ebx\\ \hline
+							Immediate&DIV 66h & DIV 6677h & DIV 66778899h \\
+							\hline
+						\end{tabular}
+					\end{table}
+			\end{itemize}
+		\end{frame}
+
+		\begin{frame}
+			\frametitle{(7) Basic Instruction CMP}
+			\begin{itemize}
+				\item{General: CMP \underline{\textbf{Operand\_1}}, \underline{\textbf{Operand\_2}}}\\
+
+				\item{This instruction performs a subtraction between two operands and sets  the flags (ZF,CF,OF etc.), it doesn't store the result}
+				\item{Examples}
+					\begin{table}[h]
+						\begin{tabular}{|c|c|c|}
+							\hline
+							CMP eax, ebx&CMP eax, 44BBCCDDh&CMP al, dh\\
+							\hline
+							CMP al, 44h&CMP ax,FFFFh&CMP [eax],4h\\
+							\hline
+						\end{tabular}
+					\end{table}
+			\end{itemize}
+		\end{frame}
+		\begin{frame}
+			\frametitle{(8) Basic Instruction JMP}
+				\begin{columns}
+					\begin{column}{0.4\columnwidth}
+						\begin{figure}
+							\includegraphics[width=1.2\textwidth]{images/jmp.eps}
+							
+							\label{Control Flow JMP}
+						\end{figure}
+					\end{column}
+					\begin{column}{0.6\columnwidth}
+						\begin{itemize}	
+							\item{General: JMP \underline{\textbf{address}} or \underline{\textbf{offset}}}\\
+
+							\item{This instruction is called "unconditional jump": when called, it sets the EIP to the address passed to the instruction. We say that the execution jumps to \textbf{address} and it's unconditional because always the execution jump.}
+							\item{Using an \textbf{offest} the EIP is incremented (or decreased) by the constant expressed by the \textbf{offest} resulting in a jump that is relative to current EIP position.}
+						\end{itemize}
+
+					\end{column}
+				\end{columns}
+		\end{frame}
+		\begin{frame}
+			\frametitle{(9) Basic Instruction JZ,JNZ and so on}
+				\begin{columns}
+					\begin{column}{2.5in}
+						\begin{itemize}
+							\item{General: JX \underline{\textbf{address}} or \underline{\textbf{offset}}}\\
+							$ X \in \{O,NO,S,NS,E,Z,NE...\}$\\
+							\item{This set of instructions are called conditional jump. It means that the execution will go to \textbf{address} if and only if the specific flag of the condition is verified.\\For example: jz jumps only if zero flag is 1}
+							\item{\textbf{Offset} is used for relative position}		
+							\end{itemize}
+					\end{column}\footnote{\url{http://www.unixwiz.net/techtips/x86-jumps.html}}
+					\begin{column}{2.5in}
+						\begin{figure}
+							\includegraphics[width=\textwidth]{images/j_unc.eps}									      \label{control}
+							\label{Control Flow JZ}
+						\end{figure}
+					\end{column}
+
+				\end{columns}
+		\end{frame}
+		\begin{frame}
+			\frametitle{(10) Basic Instruction INT}
+				\begin{itemize}
+					\item{General: INT \underline{\textbf{VALUE}}}\\
+					\item{\textbf{VALUE} is the software interrupt that should be generated (0-255)}
+					\item{Famous values are 21h for call service under windows and 80 for linux}
+					\item{look the manual for the other } 
+				\end{itemize}
+		\end{frame}
+
+
+		\begin{frame}
+			\frametitle{(11) Basic Instruction NOP}
+				\begin{itemize}
+					\item{General: NOP}\\
+					\item{The meaning of NOP is \textbf{No Operation}. Just move to next instruction.} 
+					\item{The Opcode is pretty famous and is \textbf{0x90}}
+					\item{Really useful in exploitation.}
+				\end{itemize}
+		\end{frame}
+			
+	\subsection{x86\_64}
+		\begin{frame}
+			\frametitle{How much is x86\_64 different from x86?}
+			\begin{changemargin}{-0.7cm}{0cm}
+			\begin{itemize}
+				\item{The prefix of  the registers is R instead of E so we have (rip, rax etc.)}
+				\item{There are 8 new registers (r8 to r15)}
+				\item{each of them can be consider at 8, 16, 32, 64 bits\\
+				   with $X \in \{8..15\}$ we have }
+				\begin{table}[h]
+					\begin{tabular}{|c!{\vrule width 1pt }c|c|c|c|}
+					\hline
+					bits&8&16&32&64\\
+					\hline
+					reg&rXb&rXw&rXd&rX\\
+					\hline	
+					\end{tabular}
+				\end{table}
+				\item{for better syntax information look at \url{http://www.x86-64.org/documentation/assembly.html}}
+			\end{itemize}
+			\end{changemargin}
+		\end{frame}
+\section{Something more}
+	\subsection{Program layout in memory}
+		\begin{frame}
+			\frametitle{Binary File Formats}
+				\begin{itemize}
+					\item{\color{red}PE (Portable Executable)\color{black}: used by Microsoft binary executable.}
+					\item{\color{red}ELF\color{black}: common binary format for Unix, Linux, FreeBSD and others}
+				\end{itemize}
+		\end{frame}
+	
+		\begin{frame}
+			\begin{changemargin}{-1cm}{-1cm}
+				\frametitle{How a program is seen in memory in linux (\color{red} ELF\color{white})}
+					\begin{table}[l]
+						\resizebox{12.5cm}{3cm}{
+
+						\scalebox{0.9}{
+
+					\begin{tabular}{|l l|}
+						\hlinewd{1pt}
+							\textbf{Executable}&\textbf{Description}\\\hlinewd{1.3pt}
+							.bss&This section holds uninitialized data that contribute to the program's memory image.\\
+							&By definition, the system initializes the data with zeros when the program begins to run.\\\hline
+							.comment&This section holds version control information.\\\hline
+							.data/.data1& These sections hold initialized data that contribute to \\
+							&the program's memory image\\\hline
+							.debug&This section holds information symbolic debugging.\\\hline
+							.text&This section holds the "text," or executable instructions, of a program.\\\hline
+							.init&This section holds executable instructions that contribute to the process initialization code.\\\hline
+							&That is, when a program starts to run, the system arranges to execute the code in this\\
+							&section before calling the main program entry point (called main for C programs).\\
+							\hline
+							.got&This section holds the global offset table.\\
+							\hline
+				
+					\end{tabular}
+					}
+					}
+					\end{table}
+			\end{changemargin}
+		\end{frame}
+		
+		\begin{frame}
+			\begin{changemargin}{-1cm}{-1cm}
+				\frametitle{How a program is seen in memory in windows (\color{red} PE\color{white})}
+					\begin{table}[l]
+						\resizebox{12cm}{3cm}{
+
+						\scalebox{0.9}{
+						\begin{tabular}{|l l|}
+							\hlinewd{1pt}
+								\textbf{Executable}&\textbf{Description}\\\hlinewd{1.3pt}
+								.text&Contains the executable code\\\hline
+								.rdata&Holds read-only data that is globally accessible within	\\
+								&the program\\\hline
+				
+								.data&Stores global data accessed throughout the program\\\hline
+								.idata&Sometimes present and stores the import function information;\\
+								& if this section is not present, the import function information\\
+								&is stored in the .rdata section\\\hline
+								.edata&Sometimes present and stores the export function information;\\								      &if this section is not present, the export function information\\
+								& is stored in the .rdata section\\\hline
+								.pdata&Present only in 64-bit executables and stores\\
+								& execption-handling information\\\hline
+								.rsrc&Stores resources needed by the executable\\\hline
+								.reloc&Contains information for relocation of library files\\\hline
+						\end{tabular}
+						}
+						}
+					\end{table}
+			\end{changemargin}
+		\end{frame}
+      \begin{frame}
+         \frametitle{A more realistic view of an elf in memory}
+            \begin{figure}
+               \scalebox{0.7}{
+                  \includegraphics[width=\textwidth]{images/stack1.eps}
+                  \label{This is the layout of the binary in memory}
+               }
+            \end{figure}
+      \end{frame}
+      \begin{frame}
+      \frametitle{The stack}
+      \begin{itemize}
+        \item{Is a data structure, more specifically a Last In First Out data structure, which means that the most recent data placed, or pushed, onto the stack is the next item to be removed, or popped, from the stack}
+        \item{A LIFO data structure is ideal for storing transitory information, or information that does not need to be stored for a lengthy period of time.}
+        \item{The stack stores local variables, information relating to function calls, and other information used to clean up the stack after a function or procedure is called.}
+        \item{Another important feature of the stack is that it grows down the address space. }
+      \end{itemize}
+      \end{frame}
+      \begin{frame}
+      \frametitle{Stack management: PUSH}
+        \begin{itemize}
+            \item{It is the instruction that stores information onto the stack}
+            \item{It is used for example as  PUSH {\bf immediate} or PUSH {\bf register} }
+            \item{This instruction saves the value at the top of the stack and then decreases the ESP of the dimension of data stored}
+        \end{itemize}
+      \end{frame}
+ \begin{frame}
+      \frametitle{Stack management: POP}
+        \begin{itemize}
+            \item{It is the instruction that removes information from the stack}
+            \item{It is used for example as  POP {\bf destination} }
+            \item{This instruction removes the value at the top of the stack and then increases the ESP of the dimension of data that was retrieved. The information retrieved is store in destination}
+        \end{itemize}
+      \end{frame}
+
+
+ \begin{frame}
+      \frametitle{Endianess Big vs Little}
+      	The terms \textbf{endian} and \textbf{endianness}, refer to how bytes of a data word are ordered within memory.
+      	\begin{columns}
+      		\begin{column}{0.72\columnwidth}
+      		\textbf{Big-endian} systems are systems in which the \emph{most significant byte} of the word is stored in the \emph{smallest address} given.
+      		\end{column}
+      		\begin{column}{0.28\columnwidth}
+                  \includegraphics[width=\textwidth]{images/Big-Endian.pdf}
+                  \label{Big-Endian}
+      		\end{column}
+        \end{columns}
+      	\begin{columns}
+      		\begin{column}{0.28\columnwidth}
+                  \includegraphics[width=\textwidth]{images/Little-Endian.pdf}
+                  \label{Little-Endian}
+
+      		\end{column}
+      		\begin{column}{0.72\columnwidth}
+      		\yellowemph{\textbf{Little-endian}} systems are those in which the \emph{least significant} byte is stored in the \emph{smallest address}
+
+      		\end{column}
+
+        \end{columns}
+        Little-endian is used on IA-32.
+      \end{frame}
+
+\subsection{Function and call convention}
+		\begin{frame}
+			\frametitle{Function}
+			\begin{itemize}
+				\item{The concept of function in assembly is the same of the common function in almost all the programming languages }
+				\item{A piece of code that receives data from the caller and returns some value after the elaboration}
+				\item{Differently from all high level languages the way to pass parameters to a function can be done in more than one way}
+				\item{Exist also several ways to call function in assembly}
+			\end{itemize}
+		\end{frame}
+      \begin{frame}
+      \frametitle{CALL and RET Instruction}
+        \begin{itemize}
+            \item{CALL {\bf func} moves the exectuion to the {\bf func} location. It stores return address of the instruction after the call onto the stack and put into EIP the address of the first instruction of {\bf func}} (PUSH EIP; JMP func;)
+            \item{RET {\bf value} returns to the previous execution function. It restores return address saved by the CALL.} (POP EIP;)
+        \end{itemize}
+     \end{frame}
+		\begin{frame}
+			\frametitle{Function, An example}
+				\begin{figure}
+					\scalebox{0.54}{
+					\includegraphics[width=\textwidth]{images/function.eps}
+					\label{A Function Example}
+					}
+				\end{figure}
+		\end{frame}
+		\begin{frame}
+			\frametitle{Calling Convention}
+			\begin{itemize}
+				\item{It's the way how a program receives parameters,how a function returns its return value and who cleans the stack}
+				\item{There are different implementation of the Call Convention that dictates exactly where a caller should place any parameters that a function requires}
+				\item{Everything is dipendent by the compiler(gcc/g++, visual studio c++ etc.) and by the high-level language from which the assembly comes from (c, c++, visualbasic and so on) }
+				\item{Let's look at some of those}
+			\end{itemize}
+		\end{frame}
+		\begin{frame}
+			\frametitle{The C Calling Convention}
+			\begin{itemize}
+				\item{It's the default calling convention used by most C compilers for the x86 arch}
+				\item{When a compiler doesn't use this convention we can force it using the modifier \color{red}\_cdecl}
+				\item{It specifies that the \textbf{caller places} parameters to a function on a stack in the right to left order and that the \textbf{caller removes} the parameters from the stack after the called function completes}
+			\end{itemize}
+		\end{frame}
+		\begin{frame}
+			\frametitle{The C Calling Convention example}
+			\begin{figure}
+				\subfloat{\includegraphics[width=7cm]{images/demo_cdecl.eps}}\\
+				\begin{columns}
+					\begin{column}{2.5in}
+						\subfloat{\includegraphics[width=7cm]{images/cdecl_place.eps}}\\
+						% \subfloat{\includegraphics[width=7cm]{images/cdecl_place2.eps}}\\
+					\end{column}
+				\end{columns}
+			\end{figure}
+		\end{frame}
+		\begin{frame}
+			\frametitle{The Standard Calling Convention}
+			\begin{itemize}
+				\item{This is the Miscrosoft Calling Convention standard}
+				\item{When a compiler doesn't use this convention we can force it using the modifier \color{red}\_stdcall}
+				\item{Also here the parameters are passed all using only the stack, the difference  is that the called function is responsible for clearing the function parameters from the stack when the function has finished. To do this the function has to know the right number of parameter passed. It's valid only with function with fixed number of parameters so such as printf can't use it.}
+				\begin{figure}
+					\includegraphics[width=7cm]{images/demo_stdcall.eps}\\
+					\includegraphics[width=7cm]{images/clear_stack.eps}
+				\end{figure}	
+			\end{itemize}
+		\end{frame}
+		\begin{frame}
+			\frametitle{fastcall Convention for x86}
+			\begin{itemize}
+				\item{It's a variation of the stdcall convention, the fastcall  calling convention passes up to two parameters in CPU registers which are faster to access than stack.}
+				\item{The Microsoft Visual C/ C++ and GNU gcc/g++ compilers recognize the \color{red}fastcall\color{black} modifier in function declaration.}
+				\item{In this case the first two parameters are passed in the register (ECX and EDX), the remaining parameters are place on the stack in right to left order similar to stdcall.The function is responsible for removing parameters from the stack when they return to their caller.}
+				\begin{figure}
+					\includegraphics[width=7cm]{images/demo_fastcall.eps}\\
+					\includegraphics[width=7cm]{images/fastcall_place.eps}\\
+				\end{figure}
+			\end{itemize}
+		\end{frame}
+
+
+      \begin{frame}
+        \frametitle{What we need is the C standard convention}
+        \begin{columns}
+            \begin{column}{2.5in}
+               \begin{figure}
+                  \includegraphics[width=5.5cm]{images/c_fun_example.eps}
+%            \caption{C function call example}
+               \end{figure}
+            \end{column}
+            \begin{column}{3in}
+            {\centering\tiny Low memory addresses and top of the stack \par}
+               \begin{figure}
+                  \includegraphics[width=3cm]{images/stack_after_call.eps}
+ %           \caption{Visual representation of the stack after a function has been called}
+               
+               \end{figure}
+                 {\centering\tiny High memory addresses and Bottom of the stack\par}
+            \end{column}
+         \end{columns}
+      \end{frame}
+      \begin{frame}
+        \frametitle{Asm view of the same example}
+        \begin{columns}
+            \begin{column}{2.5in}
+            	\hspace*{1cm} 
+                \begin{figure}\flushleft
+                    \includegraphics[width=4cm]{images/ida_main.eps}
+                \end{figure}
+                \hspace*{1cm} 
+                \begin{figure}\flushleft
+                    \includegraphics[width=2cm]{images/ida_function.eps}
+                \end{figure}
+
+            \end{column}
+            \begin{column}{2.5in}
+            \vspace{0.7cm}
+            {\centering\tiny Low memory addresses and top of the stack \par}
+               \begin{figure}
+                  \includegraphics[width=3cm]{images/stack_after_call.eps}
+ %           \caption{Visual representation of the stack after a function has been called}
+               
+               \end{figure}
+                 {\centering\tiny High memory addresses and Bottom of the stack\par}
+            \end{column}
+        \end{columns}
+        \begin{figure}
+        \end{figure}
+        
+     \end{frame}
+\subsection{GDB tutorial}
+        \begin{frame}
+        \frametitle{Our friend gdb}
+        \begin{itemize}
+            \item{{\bf What is GDB?}}\\
+            GDB is the GNU Project debugger, allows you to see what is going on `inside' another program while it executes -- or what another program was doing at the moment it crashed.`\footnote{http://www.gnu.org/software/gdb/}
+        \end{itemize}
+      \end{frame}
+            \begin{frame}
+        \frametitle{Start, break and navigate the execution with gdb}
+        \begin{itemize}
+            \item{Suppose to have the program 'first' and you want run it into gdb }\\
+            \begin{itemize}
+                \item{{\bf gdb ./first} load the binary information in gdb}
+            \end{itemize}
+            \item{Now you decide to start the program with two parameters}\\
+            \begin{itemize}
+                \item{{\bf run 1 "abc"} pass an integer as arg[1] and "abc" as arg[2]}
+                \item{{\bf run `printf "AAAAAAAAAAAA"`} in this case we're passing the output of the bash command}
+            \end{itemize}
+            \item{Suppose you want, now, to stop the execution at the address of a certain instruction}\\
+            \begin{itemize}
+                \item{{\bf break *0xDEADBEAF} points a break at that address}
+                \item{{\bf break *main+1} if you have the debugging symbols this can be less painful}
+                \item{{\bf catch syscall} block the execution when a syscall happens}
+            \end{itemize}
+        \end{itemize}
+      \end{frame}
+      \begin{frame}
+        \frametitle{Start, break and navigate the execution with gdb}
+        \begin{itemize}
+            \item{Now the execution has been stoped by our break point. Here we can do several things...}
+            \item{To procede we can:}
+            \begin{itemize}
+                \item{{\bf ni} allows to procede instruction per instruction}
+                \item{{\bf next 4} move, if you have the lines number in the binary, 4 lines ahead}
+                \item{{\bf continue} goes directly to the next breakpoint}
+            \end{itemize}
+            \item{To see info about the execution state:}
+            \begin{itemize}
+                \item{{\bf info registers} to see the values assumed by the registers}
+                \item{{\bf info frame} to see the values of the stack frame releted to the function where we are in}
+                \item{{\bf info file} print the information about the sections of the binary}
+            \end{itemize}
+        \end{itemize}
+      \end{frame}
+      \begin{frame}
+        \frametitle{Navigate the stack}
+        \begin{itemize}
+            \item{We are always stopped somewhere in the code and we want to evaluate the stack}
+            \item{Some useful view of the stack is achievable with:}
+            \begin{itemize}
+               \item{{\bf x/100wx \$esp} prints 100 elements of the stack from the esp to down in exadecimal word by word form}
+               \item{{\bf x/10wo \$ebp-100} prints 10 elements of the stack from the ebp-100 to down in octal word by word form}
+               \item{{\bf x/s \$eax} prints the elements pointed by eax as string form in byte form }
+            \end{itemize}
+            \item{Have you the debug symbols?}
+            \begin{itemize}
+                \item{{\bf print args} prints info about the main parameters}
+                \item{{\bf print a} prints the variable a value}
+                \item{{\bf print *b} prints the value pointed by b}
+            \end{itemize}
+        \end{itemize}
+      \end{frame}
+      \begin{frame}
+        \frametitle{Our friend gdb}
+        \begin{itemize}
+            \item{{\bf The '$\sim$/.gdbinit' file}}\\
+            Gdb is a command line tool and it supports the configuration script as almost all the *nix software.
+
+            Some options that you may want to tune are:
+            \begin{itemize}
+                \item{{\bf set history save on}}\\
+                To have the lastest commands always available also when we re-open gdb
+                \item{{\bf set follow-fork-mode child}}\\
+                Allows you, if the process spawns children, to follow them and not only wait their end.
+                \item{{\bf set disassembly-flavor [intel \textpipe{}  att]}}\\
+                This option sets in which predefined syntax your disassembled will be showed up. The default one is at\&t
+            \end{itemize}
+        \end{itemize}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Layout in gdb}
+        \begin{itemize}
+            \item{Aren't you a fun of the gdb command line?}
+            \item{Give a simple text interface to it}
+            \begin{itemize}
+                \item{{\bf layout asm} turn the interface to the assembly view always visible during debugging}
+                \item{{\bf layout src} if your binary has the dubugging symbols you will have your c source view visible}
+                \item{{\bf layout reg} add to the interface the register status view. It could be used in combination with one of the view described above}
+                \item{{\bf gdb -tui ./mybin} runs gdb directly in this Text User Interface}
+            \end{itemize}
+        \end{itemize}
+      \end{frame}
+		\subsection{Conclusion}
+		\begin{frame}
+			\frametitle{Bibliography}
+			\begin{itemize}
+				\item{The Ida Pro Book 2 Edition }
+				\item{The Shellcoder Handbook}
+				\item{Reverse Engineering Code with IDA Pro}
+				\item{Secrets of Reverse Engineering}
+			\end{itemize}
+		\end{frame}
+		\begin{frame}
+			\frametitle{End}
+			\begin{itemize}
+				\item{Thanks Folk...Questions?}
+			\end{itemize}
+		\end{frame}
+%\begin{frame}
+%  \frametitle{Simple slide with three points shown in succession}   % Insert frame title between curly braces
+
+%  \begin{itemize}
+%  \item<1-> Point 1 (Click ``Next Page'' to see Point 2) % Use Next Page to go to Point 2
+%  \item<2-> Point 2  % Use Next Page to go to Point 3
+%  \item<3-> Point 3
+%  \end{itemize}
+%\end{frame}
+%\note{Speak clearly}  % Add notes to yourself that will be displayed when
+                      % typeset with the notes or notesonly class options
+
+
+
+%\begin{frame}
+ % \frametitle{Slide with two columns: items and a graphic}   % Insert frame title between curly braces
+  %\begin{columns}[c]
+ % \column{2in}  % slides are 3in high by 5in wide
+ % \begin{itemize}
+ %\item<1-> First item
+ % \item<2-> Second item
+ % \item<3-> ...
+ % \end{itemize}
+ % \column{2in}
+ % \framebox{Insert graphic here % e.g. \includegraphics[height=2.65in]{graphic}
+ % }
+ % \end{columns}
+%\end{frame}
+%\note{The end}       % Add notes to yourself that will be displayed when
+		     % typeset with the notes or notesonly class options
+
+\end{document}

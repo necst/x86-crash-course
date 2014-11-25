@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="744" height="1052">
+  <g>
+    <text xml:space="preserve" style="font-size:40px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="89" y="187" id="text3184">A</text>
+    <text xml:space="preserve" style="font-size:40px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="153" y="187" id="text3188">B</text>
+    <text xml:space="preserve" style="font-size:40px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="212" y="186" id="text3192">C</text>
+    <text xml:space="preserve" style="font-size:40px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="269" y="187" id="text3196">D</text>
+    <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" d="M 550,932 L 550,872 L 70,872 L 70,932 M 370,802 L 370,862 M 60,142 L 60,202 L 300,202 L 300,142 L 60,142 z M 120,142 L 120,202 M 180,142 L 180,202 M 240,142 L 240,202 M 300,297 L 180,297 L 180,357 L 300,357 L 300,297 z M 240,297 L 240,357 M 300,462 L 240,462 L 240,522 L 300,522 L 300,462 z M 0,932 L 620,932 M 130,872 L 130,932 M 190,872 L 190,932 M 250,872 L 250,932 M 310,692 L 310,932 M 370,872 L 370,932 M 430,872 L 430,932 M 490,872 L 490,932 M 190,862 L 430,862 L 430,802 L 190,802 L 190,862 z M 250,792 L 370,792 L 370,732 L 250,732 L 250,792 z M 250,802 L 250,862" id="path3230"/>
+    <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;opacity:0.45" d="M 60,297 L 180,297 L 180,357 L 60,357 L 60,297 z M 120,297 L 120,357 M 240,522 L 60,522 L 60,462 L 240,462 M 120,462 L 120,522 M 180,462 L 180,522" id="path4201"/>
+    <use x="0" y="0" xlink:href="#text3196" id="use5172" transform="translate(0,155)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text3192" id="use5174" transform="translate(0,154)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text3188" id="use5176" transform="translate(0,155)" width="744" height="1052" style="opacity:0.45"/>
+    <use x="0" y="0" xlink:href="#text3184" id="use5178" transform="translate(0,155)" width="744" height="1052" style="opacity:0.45"/>
+    <use x="0" y="0" xlink:href="#text3184" id="use5180" transform="translate(0,320)" width="744" height="1052" style="opacity:0.45"/>
+    <use x="0" y="0" xlink:href="#text3188" id="use5182" transform="translate(0,320)" width="744" height="1052" style="opacity:0.45"/>
+    <use x="0" y="0" xlink:href="#text3192" id="use5184" transform="translate(0,319)" width="744" height="1052" style="opacity:0.45"/>
+    <use x="0" y="0" xlink:href="#text3196" id="use5186" transform="translate(0,320)" width="744" height="1052"/>
+    <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" d="M 60,97 L 60,127 M 60,112 L 285,112 M 300,212 L 300,242 M 300,227 L 75,227 M 180,267 L 285,267 M 180,282 L 180,252 M 300,382 L 190,382 M 300,367 L 300,397 M 240,437 L 285,437 M 240,422 L 240,452 M 300,567 L 300,537 M 300,552 L 250,552 M 80,992 L 540,992" id="path5188"/>
+    <path style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-dashoffset:0;stroke-opacity:1" d="M 300,112 L 280,117 L 280,107 L 300,112 z " id="path6159"/>
+    <use x="0" y="0" xlink:href="#path6159" id="use7131" transform="matrix(-1,0,0,1,360,115)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#path6159" id="use7133" transform="translate(0,155)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#path6159" id="use7135" transform="matrix(-1,0,0,1,480,270)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#path6159" id="use7137" transform="translate(0,325)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#path6159" id="use7139" transform="matrix(-1,0,0,1,540,440)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#path6159" id="use7161" transform="translate(250,880)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#path6159" id="use7163" transform="matrix(-1,0,0,1,370,880)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text3184" id="use7165" transform="translate(12,730)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7165" id="use7167" transform="translate(244,0)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text3188" id="use7169" transform="translate(7,730)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text3192" id="use7171" transform="translate(5,729)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text3196" id="use7173" transform="translate(11,730)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7169" id="use7175" transform="translate(240,0)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7171" id="use7177" transform="translate(239,0)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7173" id="use7179" transform="translate(240,0)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7171" id="use7181" transform="translate(0,-69)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7173" id="use7183" transform="translate(0,-70)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7181" id="use7185" transform="translate(119,0)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7183" id="use7187" transform="translate(120,0)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7183" id="use7189" transform="translate(0,-70)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7189" id="use7191" transform="translate(60,0)" width="744" height="1052"/>
+    <text xml:space="preserve" style="font-size:28px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="131" y="977" id="text7197">3</text>
+    <text xml:space="preserve" style="font-size:28px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="191" y="977" id="text7201">2</text>
+    <text xml:space="preserve" style="font-size:28px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="249" y="977" id="text7205">1</text>
+    <text xml:space="preserve" style="font-size:28px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="311" y="977" id="text7209">0</text>
+    <use x="0" y="0" xlink:href="#text7205" id="use7213" transform="translate(120,0)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text7201" id="use7215" transform="translate(239,0)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text7197" id="use7217" transform="translate(360,0)" width="744" height="1052"/>
+    <text xml:space="preserve" style="font-size:28px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="183.5" y="1032" id="text7219">Little endian</text>
+    <text xml:space="preserve" style="font-size:28px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="408.5" y="1032" id="text7223">Big endian</text>
+    <use x="0" y="0" xlink:href="#text7219" id="use7227" transform="translate(215,-469)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text7219" id="use7229" transform="translate(215,-639)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text7219" id="use7231" transform="translate(215,-795)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text7223" id="use7233" transform="translate(-19,-584)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text7223" id="use7235" transform="translate(-19,-754)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text7223" id="use7237" transform="translate(-19,-909)" width="744" height="1052"/>
+    <text xml:space="preserve" style="font-size:28px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="363" y="502" id="text7241">bit access</text>
+    <text xml:space="preserve" style="font-size:28px;text-align:end;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="356" y="502" id="text7251">8</text>
+    <use x="0" y="0" xlink:href="#text7241" id="use7257" transform="translate(0,-165)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text7241" id="use7261" transform="translate(0,-320)" width="744" height="1052"/>
+    <text xml:space="preserve" style="font-size:28px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="340" y="337" id="text7263">16</text>
+    <text xml:space="preserve" style="font-size:28px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="340" y="182" id="text7267">32</text>
+    <use x="0" y="0" xlink:href="#text7241" id="use7271" transform="translate(236,264)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text7251" id="use7273" transform="translate(236,264)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7257" id="use7275" transform="translate(236,499)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text7263" id="use7277" transform="translate(236,499)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#use7261" id="use7279" transform="translate(236,724)" width="744" height="1052"/>
+    <use x="0" y="0" xlink:href="#text7267" id="use7281" transform="translate(236,724)" width="744" height="1052"/>
+    <text xml:space="preserve" style="font-size:56px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="321" y="66" id="text7283">Register</text>
+    <text xml:space="preserve" style="font-size:56px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans" x="322" y="660" id="text7287">Memory</text>
+  </g>
+</svg>
