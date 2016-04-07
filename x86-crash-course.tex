@@ -125,7 +125,7 @@
   \item{The processor has 32-bits internal registers to manage and execute operations on data\newline They are EAX, EBX, ECX, EDX, ESI, EDI, EBP, EIP and ESP }
   \item{Among them EAX, EBX, ECX, EDX are for general purposes}
   \item{EBP (BP = base pointer) and ESP (SP = stack pointer) are the stack bounds (see in a few slides)}
-  \item{EDI and ESI are extra registers}
+  \item{EDI and ESI are extra registers used as source and dest for special instructions (e.g strcmp)}
   \item{EIP (IP = instruction pointer) is the register that contains the address of the next instruction}
   \end{itemize}
 \end{frame}
@@ -619,6 +619,24 @@
   \end{columns}
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Endianness cont.}
+  The \textbf{endianness} is a convention that specifies in which order the bytes of a data word are lined up sequentially in memory.
+  \begin{columns}
+    \begin{column}{0.5\columnwidth}
+      \includegraphics[width=\textwidth]{images/Endianessmap1.pdf}
+      \label{Big-Endian}
+    \end{column}
+    \begin{column}{0.5\columnwidth}
+      \includegraphics[width=0.6\textwidth]{images/Endianessmap2.pdf}
+      \label{Little-Endian}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+
 \subsection{Functions and Calling Convention}
 \begin{frame}
   \frametitle{Function}
@@ -827,9 +845,20 @@ function endp
   \end{figure}
 \end{frame}
 
-\subsection{GDB Tutorial}
+\subsection{objdump -- GDB tutorial}
 \begin{frame}
-  \frametitle{Our ol' friend gdb}
+  \frametitle{Objdump}
+  \begin{itemize}
+  \item{{\bf man objdump}}\\
+objdump \textbf{displays information} about one or more \textbf{object files}.
+  \item{\textbf{-x}} all-headers
+  \item{\textbf{-d}} disassemble
+  \item{\textbf{-M intel}} intel syntax (default is att)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Our friend gdb}
   \begin{itemize}
   \item{{\bf What is GDB?}}\\
     GDB is GNU Project's Debugger: allows to follow, step by step, at assembler-level granularity, a running program, or what a program was doing right before it crashed.\footnote{http://www.gnu.org/software/gdb/}
