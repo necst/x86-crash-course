@@ -122,11 +122,11 @@
 \begin{frame}
   \frametitle{(1) How does the IA-32 look like?}
   \begin{itemize}
-  \item{The processor has 32-bits internal registers to manage and execute operations on data\newline They are EAX, EBX, ECX, EDX, ESI, EDI, EBP, EIP and ESP }
-  \item{Among them EAX, EBX, ECX, EDX are for general purposes}
-  \item{EBP (BP = base pointer) and ESP (SP = stack pointer) are the stack bounds (see in a few slides)}
-  \item{EDI and ESI are extra registers used as source and dest for special instructions (e.g strcmp)}
-  \item{EIP (IP = instruction pointer) is the register that contains the address of the next instruction}
+  \item{The processor has 32-bits internal registers to manage and execute operations on data}
+  \item{{\bf EAX}, {\bf EBX}, {\bf ECX}, {\bf EDX} are for general purposes}
+  \item{{\bf EBP} (BP = base pointer) and {\bf ESP} (SP = stack pointer) are the stack bounds}
+  \item{{\bf EDI} and {\bf ESI} are extra registers used as source and dest for special instructions (e.g strcpy)}
+  \item{{\bf EIP} (IP = instruction pointer) is the register that contains the address of the next instruction}
   \end{itemize}
 \end{frame}
 \begin{frame}
@@ -169,10 +169,21 @@
   \item{Only 8 bits out of 32 are of interest for us. The others are either for the kernel mode function or  are of little interest for programmers}
   \item{These 8 bits are called flags. We consider them singularly. They are boolean (true/false) }
   \item{They represent overflow, direction, interrupt disable, sign, zero, auxiliary carry, parity and carry flags}
-  \item{Since they represent information about the instruction last executed, they change at every execution step. They are VERY important for the control flow of the program (see slide 18)}
+  \item{Since they represent information about the instruction last executed, they change at every execution step. They are VERY important for the control flow of the program}
   \end{itemize}
 \end{frame}
-\subsection{Overview on different syntaxes}
+
+
+\subsection{Overview on Assembly}
+\begin{frame}
+  \frametitle{Assembly}
+  \begin{itemize}
+  \item{Low-Level Language}
+  \item{Directly mapped with binary code}
+  \item{Custom per Architecture ({\bf x86}, PowerPC, ARM ...)}
+  \end{itemize}
+\end{frame}
+
 \begin{frame}
   \frametitle{Syntax}
   \begin{itemize}
@@ -414,8 +425,20 @@
 
   \end{columns}
 \end{frame}
+
 \begin{frame}
-  \frametitle{(10) Basic Instruction INT}
+  \frametitle{(10) Basic Instruction NOP}
+  \begin{itemize}
+  \item{NOP}\\
+  \item{The meaning of NOP is \textbf{No Operation}. Just move to next instruction.}
+  \item{The opcode is pretty famous and is \textbf{0x90}}
+  \item{Really useful in exploitation (we will see).}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{(11) Basic Instruction INT}
   \begin{itemize}
   \item{INT \underline{\textbf{VALUE}}}\\
   \item{\textbf{VALUE} is the software interrupt number to generate (0-255)}
@@ -426,12 +449,11 @@
 
 
 \begin{frame}
-  \frametitle{(11) Basic Instruction NOP}
+  \frametitle{(12) Syscall/SYSENTER}
+  Nowadays Syscalls are done with specific instructions.
   \begin{itemize}
-  \item{NOP}\\
-  \item{The meaning of NOP is \textbf{No Operation}. Just move to next instruction.}
-  \item{The opcode is pretty famous and is \textbf{0x90}}
-  \item{Really useful in exploitation (we will see).}
+  \item{syscall is used for Linux 64-bit}
+  \item{SYSENTER is used by Microsoft Windows}
   \end{itemize}
 \end{frame}
 
@@ -440,8 +462,8 @@
   \frametitle{How much is x86\_64 different from x86?}
   \begin{changemargin}{-0.7cm}{0cm}
     \begin{itemize}
-    \item{The prefix of  the registers is R instead of E so we have (rip, rax etc.)}
-    \item{There are 8 new registers (r8 to r15)}
+    \item{The prefix of  the registers is R instead of E so we have ({\bf RIP}, {\bf RAX} etc.)}
+    \item{There are 8 new registers ({\bf R8} to {\bf R15})}
     \item{each of them can be considered at 8, 16, 32, 64 bits (qword)\\
         with $X \in \{8..15\}$ we have }
       \begin{table}[h]
@@ -475,9 +497,7 @@
   \begin{changemargin}{-1cm}{-1cm}
     \frametitle{How an executable is mapped to memory in Linux (ELF)}
     \begin{table}[l]
-      \resizebox{12.5cm}{3cm}{
-
-        \scalebox{0.9}{
+        \scalebox{0.7}{
 
           \begin{tabular}{|l l|}
             \hlinewd{1pt}
@@ -497,7 +517,6 @@
             \hline
 
           \end{tabular}
-        }
       }
     \end{table}
   \end{changemargin}
@@ -507,8 +526,6 @@
   \begin{changemargin}{-1cm}{-1cm}
     \frametitle{How an executable is mapped to memory in Windows (PE)}
     \begin{table}[l]
-      \resizebox{12cm}{3cm}{
-
         \scalebox{0.9}{
           \begin{tabular}{|l l|}
             \hlinewd{1pt}
@@ -518,17 +535,13 @@
             &the program\\\hline
 
             .data&Stores global data accessed throughout the program\\\hline
-            .idata&Sometimes present and stores the import function information;\\
-            & if this section is not present, the import function information\\
-            &is stored in the .rdata section\\\hline
-            .edata&Sometimes present and stores the export function information;\\		 &if this section is not present, the export function information\\
-            & is stored in the .rdata section\\\hline
+            .idata&stores the import function information;\\\hline
+            .edata&stores the export function information;\\\hline
             .pdata&Present only in 64-bit executables and stores\\
             & execption-handling information\\\hline
             .rsrc&Stores resources needed by the executable\\\hline
             .reloc&Contains information for relocation of library files\\\hline
           \end{tabular}
-        }
       }
     \end{table}
   \end{changemargin}
@@ -554,7 +567,7 @@
           \nodepart{six}%
           stack \textrm{(grows $\uparrow$)}%
           \nodepart{seven}%
-          env pointer%
+          env%
           \nodepart{eight}%
           argc%
         };
@@ -639,11 +652,11 @@
 
 \subsection{Functions and Calling Convention}
 \begin{frame}
-  \frametitle{Function}
+  \frametitle{Functions}
   \begin{itemize}
-  \item{The concept of ``function'' at the machine level is the same as in high-level programming languages}
-  \item{Function = piece of code that receives data from the caller, execute code and returns some value}
-  \item{Calling convention = how parameters are passed and value is retured = which instructions are executed to do this}
+  \item{The concept of {\it ``function''} at the machine level is the same as in high-level programming languages}
+  \item{{\bf Function}: piece of code that receives data from the caller, execute code and returns some value}
+  \item{{\bf Calling convention}: how parameters are passed and value is retured = which instructions are executed to do this}
   \item{There exist several calling conventions, depending on architecture, OS and binary format}
   \end{itemize}
 \end{frame}
@@ -656,15 +669,15 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Functions: An example as seen in IDAPro}
-  \begin{figure}
-    \scalebox{0.54}{
-      \includegraphics[width=\textwidth]{images/function.eps}
-      \label{A Function Example}
-    }
-  \end{figure}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Functions: An example as seen in IDAPro}
+%   \begin{figure}
+%     \scalebox{0.54}{
+%       \includegraphics[width=\textwidth]{images/function.eps}
+%       \label{A Function Example}
+%     }
+%   \end{figure}
+% \end{frame}
 
 \begin{frame}
   \frametitle{Calling Convention}
@@ -727,7 +740,7 @@ ret 12  ; return and clear 12 bytes from the stack
   \begin{itemize}
   \item{Variation of the standard calling convention}
   \item {passes up to 2 parameters via registers (faster than stack).}
-  \item{The Microsoft Visual C/ C++ and GNU GCC/g++ compilers recognize the \color{red}fastcall\color{black} modifier in function declaration.}
+  \item{The Microsoft Visual C/ C++ and GNU GCC/g++ compilers recognize the \color{red}fastcall \color{black} modifier in function declaration.}
   \item{Example: the 1st and 2nd parameters are passed via ECX and EDX, the remainder parameters pushed on the stack in right to left order. The called function must cleanup the stack when returning.}
   \end{itemize}
 \begin{lstlisting}[language={[x86masm]Assembler}]
@@ -741,7 +754,7 @@ call demo_fastcall
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{A Closer Look at the Standard Calling Convention}
+  \frametitle{A Closer Look at the cdecl Calling Convention}
   \begin{columns}
     \begin{column}{.5\textwidth}
 \begin{lstlisting}[language=C]
@@ -900,7 +913,10 @@ objdump \textbf{displays information} about one or more \textbf{object files}.
     \item{{\bf ni} allows to procede instruction per instruction}
     \item{{\bf next 4} moves 4 lines ahead (if you have the
         line-numbers information in the binary)}
+    \item{{\bf si} step into function}
+    \item{{\bf finish} run until the end of current function}
     \item{{\bf continue} runs until the next break point (if any)}
+
     \end{itemize}
   \item{To see info about the execution state:}
     \begin{itemize}
@@ -962,6 +978,7 @@ objdump \textbf{displays information} about one or more \textbf{object files}.
     \item{{\bf layout reg} add to the interface the register status view. It could be used in combination with one of the view described above}
     \item{{\bf gdb -tui ./mybin} runs gdb directly in this Text User Interface}
     \end{itemize}
+  \item{Use {\bf CTRL+X A} to go back to standard interface.}
   \end{itemize}
 \end{frame}
 
