@@ -1,2 +1,2 @@
-x86-crash-course
+x86 Crash Course
 ================

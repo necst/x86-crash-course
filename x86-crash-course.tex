@@ -4,12 +4,60 @@
 \usepackage{tabularx}
 \usepackage{epstopdf}
 \usepackage{amsmath}
-\usepackage{textcomp}
-\usepackage{subfig}
 \usepackage{tipa}
 \usepackage{mathptmx}
 \usepackage[11pt]{moresize}
 \usepackage{tikz}
+
+\usetikzlibrary{shapes}
+\tikzset{%
+  stack/.style={%
+    rectangle split,%
+    draw,%
+    text width=10em,%
+    minimum width=10.1em,%
+    anchor=west}
+}
+
+% solarized color scheme
+\definecolor{base03}{HTML}{002B36}
+\definecolor{base02}{HTML}{073642}
+\definecolor{base01}{HTML}{586E75}
+\definecolor{base00}{HTML}{657B83}
+\definecolor{base0}{HTML}{839496}
+\definecolor{base1}{HTML}{93A1A1}
+\definecolor{base2}{HTML}{EEE8D5}
+\definecolor{base3}{HTML}{FDF6E3}
+\definecolor{yellow}{HTML}{B58900}
+\definecolor{orange}{HTML}{CB4B16}
+\definecolor{red}{HTML}{DC322F}
+\definecolor{magenta}{HTML}{D33682}
+\definecolor{violet}{HTML}{6C71C4}
+\definecolor{blue}{HTML}{268BD2}
+\definecolor{cyan}{HTML}{2AA198}
+\definecolor{green}{HTML}{859900}
+
+\usepackage{listings}
+\lstset{%
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  belowskip=10pt,
+  aboveskip=10pt,
+  abovecaptionskip=0pt,
+  sensitive=true,
+  backgroundcolor=\color{base3},
+  keywordstyle=\color{cyan},
+  commentstyle=\color{base1},
+  stringstyle=\color{blue},
+  numberstyle=\color{violet},
+  showstringspaces=false,
+  breakatwhitespace=true,
+  basicstyle=\ttfamily\scriptsize,
+  %lineskip={-1.75pt},
+  columns=fullflexible,
+  frame=tb
+}
 
 \makeatletter
 
@@ -18,9 +66,10 @@
   \futurelet\reserved@a\@xhline}
 \makeatother
 
+\definecolor{pureyellow}{HTML}{FFFF00}
 
 \newcommand*{\yellowemph}[1]{%
-  \tikz\node[rectangle, fill=yellow, rounded corners, inner sep=0.3mm]{#1};%
+  \tikz\node[rectangle, fill=pureyellow, rounded corners, inner sep=0.3mm]{#1};%
 }
 
 \newenvironment{changemargin}[2]{%
@@ -61,14 +110,14 @@
   \end{itemize}
 \end{frame}
 
-\section[Outline]{}
+\section{Introduction}
 
-% Creates table of contents slide incorporating
-% all \section and \subsection commands
 \begin{frame}
   \tableofcontents
 \end{frame}
-\section {Crash course on Assembly Language}
+
+\section{Crash course on Assembly Language}
+
 \subsection{Overview on the common 32-bit Intel Architecture (IA)}
 \begin{frame}
   \frametitle{(1) How does the IA-32 look like?}
@@ -409,7 +458,9 @@
   \end{changemargin}
 \end{frame}
 \section{Something more}
-\subsection{Program layout in memory}
+
+\subsection{Program Layout In Memory}
+
 \begin{frame}
   \frametitle{Binary File Formats}
   \begin{itemize}
@@ -482,15 +533,37 @@
     \end{table}
   \end{changemargin}
 \end{frame}
+
 \begin{frame}
   \frametitle{A more realistic view of an elf in memory}
-  \begin{figure}
-    \scalebox{0.7}{
-      \includegraphics[width=\textwidth]{images/stack1.eps}
-      \label{This is the layout of the binary in memory}
-    }
-  \end{figure}
+  \begin{center}
+    {\tiny Low addresses (0x80000000)}
+    \begin{center}
+      \begin{tikzpicture}[every
+        node/.style={font=\ttfamily\footnotesize}]
+        \node [stack,rectangle split parts=8] (s) {%
+          Shared libraries%
+          \nodepart{two}%
+          .text%
+          \nodepart{three}%
+          .bss%
+          \nodepart{four}%
+          heap \textrm{(grows $\downarrow$)}%
+          \nodepart{five}%
+          ...%
+          \nodepart{six}%
+          stack \textrm{(grows $\uparrow$)}%
+          \nodepart{seven}%
+          env pointer%
+          \nodepart{eight}%
+          argc%
+        };
+      \end{tikzpicture}
+    \end{center}
+    {\tiny High addresses (0xbfffffff)}
+  \end{center}
 \end{frame}
+
 \begin{frame}
   \frametitle{The stack}
   \begin{itemize}
@@ -546,7 +619,7 @@
   \end{columns}
 \end{frame}
 
-\subsection{Function and call convention}
+\subsection{Functions and Calling Convention}
 \begin{frame}
   \frametitle{Function}
   \begin{itemize}
@@ -566,7 +639,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Function, An example}
+  \frametitle{Functions: An example as seen in IDAPro}
   \begin{figure}
     \scalebox{0.54}{
       \includegraphics[width=\textwidth]{images/function.eps}
@@ -593,154 +666,239 @@
   \item{It specifies that the \textbf{caller places} parameters on the stack in the right to left order and that the \textbf{caller removes} the parameters from the stack after the called function completes}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{The C Calling Convention example}
-  \begin{figure}
-    \subfloat{\includegraphics[width=\textwidth]{images/demo_cdecl.eps}}\\
-    \begin{columns}
-      \begin{column}{2.5in}
-        \subfloat{\includegraphics[width=7cm]{images/cdecl_place.eps}}\\
-        % \subfloat{\includegraphics[width=7cm]{images/cdecl_place2.eps}}\\
-      \end{column}
-    \end{columns}
-  \end{figure}
+\begin{lstlisting}[language=C]
+void demo_cdecl(int a, int b, int c, int z);
+
+//...
+
+demo_cdecl(1, 2, 3, 4); //calling
+\end{lstlisting}
+
+\begin{lstlisting}[language={[x86masm]Assembler}]
+; ...
+push 4          ; push last parameter value
+push 3          ; push third parameter value
+push 2          ; ...
+push 1
+call demo_cdecl ; call the subroutine
+\end{lstlisting}
+
 \end{frame}
-\begin{frame}
+
+\begin{frame}[fragile]
   \frametitle{The Standard Calling Convention}
   \begin{itemize}
-  \item{This is the Miscrosoft Calling Convention standard}
+  \item{This is Miscrosoft's calling convention standard}
   \item{When a compiler doesn't use this convention we can force it using the modifier \color{red}\_stdcall}
-  \item{Also here the parameters are passed all using only the stack, the difference  is that the called function is responsible for clearing the function parameters from the stack when the function has finished. To do this the function has to know the right number of parameter passed. It's valid only with function with fixed number of parameters so such as printf can't use it.}
-    \begin{figure}
-      \includegraphics[width=7cm]{images/demo_stdcall.eps}\\
-      \includegraphics[width=7cm]{images/clear_stack.eps}
-    \end{figure}
+  \item{The parameters are passed using the stack as in \_cdecl, but in \_stdcall the called function is \textbf{responsible for clearing the function parameters from the stack before returning}. To do this, the function needs to know the right number of parameter passed. Can be used only with functions having a fixed number of parameters (e.g., no \texttt{printf}).}
   \end{itemize}
+
+\begin{lstlisting}[language=C]
+void _stdcall demo_stdcall(int a, int b, int c);
+demo_stdcall(1, 2, 3);
+\end{lstlisting}
+\begin{lstlisting}[language={[x86masm]Assembler}]
+ret 12  ; return and clear 12 bytes from the stack
+\end{lstlisting}
 \end{frame}
-\begin{frame}
+
+\begin{frame}[fragile]
   \frametitle{fastcall Convention for x86}
   \begin{itemize}
-  \item{It's a variation of the stdcall convention, the fastcall  calling convention passes up to two parameters in CPU registers which are faster to access than stack.}
-  \item{The Microsoft Visual C/ C++ and GNU gcc/g++ compilers recognize the \color{red}fastcall\color{black} modifier in function declaration.}
-  \item{In this case the first two parameters are passed in the register (ECX and EDX), the remaining parameters are place on the stack in right to left order similar to stdcall.The function is responsible for removing parameters from the stack when they return to their caller.}
-    \begin{figure}
-      \includegraphics[width=7cm]{images/demo_fastcall.eps}\\
-      \includegraphics[width=7cm]{images/fastcall_place.eps}\\
-    \end{figure}
+  \item{Variation of the standard calling convention}
+  \item {passes up to 2 parameters via registers (faster than stack).}
+  \item{The Microsoft Visual C/ C++ and GNU GCC/g++ compilers recognize the \color{red}fastcall\color{black} modifier in function declaration.}
+  \item{Example: the 1st and 2nd parameters are passed via ECX and EDX, the remainder parameters pushed on the stack in right to left order. The called function must cleanup the stack when returning.}
   \end{itemize}
+\begin{lstlisting}[language={[x86masm]Assembler}]
+; demo_fastcall(1, 2, 3, 4);
+push 4 ; push 4th parameter
+push 3 ; push 3rd parameter
+mov edx, 2 ; move 2nd parameter in EDX
+mov ecx, 1 ; move 1st parameter in ECX
+call demo_fastcall
+\end{lstlisting}
 \end{frame}
 
-
-\begin{frame}
-  \frametitle{What we need is the C standard convention}
+\begin{frame}[fragile]
+  \frametitle{A Closer Look at the Standard Calling Convention}
   \begin{columns}
-    \begin{column}{2.5in}
-      \begin{figure}
-        \includegraphics[width=5.5cm]{images/c_fun_example.eps}
-        % \caption{C function call example}
-      \end{figure}
-    \end{column}
-    \begin{column}{3in}
-      {\centering\tiny Low memory addresses and top of the stack \par}
-      \begin{figure}
-        \includegraphics[width=3cm]{images/stack_after_call.eps}
-        % \caption{Visual representation of the stack after a function has been called}
+    \begin{column}{.5\textwidth}
+\begin{lstlisting}[language=C]
+void function (int a, int b) {
+  int array [5];
+}
 
-      \end{figure}
-      {\centering\tiny High memory addresses and Bottom of the stack\par}
+int main (int argc, char** argv) {
+  function(1, 2);
+  printf("This is where the ret address points");
+}
+\end{lstlisting}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \begin{center}
+        {\tiny Low memory addresses (top of the stack)}
+        \begin{center}
+          \begin{tikzpicture}[every
+            node/.style={font=\ttfamily\footnotesize}]
+            \node [stack,rectangle split parts=7] (s) {%
+              ...%
+              \nodepart{two}%
+              array[0]%
+              \nodepart{three}%
+              Saved EBP%
+              \nodepart{four}%
+              return address%
+              \nodepart{five}%
+              1%
+              \nodepart{six} 2%
+              \nodepart{seven}%
+              ...  };
+          \end{tikzpicture}
+        \end{center}
+        {\tiny High memory addresses (bottom of the stack)}
+      \end{center}
+
     \end{column}
   \end{columns}
 \end{frame}
-\begin{frame}
-  \frametitle{Asm view of the same example}
+
+\begin{frame}[fragile]
+  \frametitle{Assembler-level View of the Same Example}
   \begin{columns}
-    \begin{column}{2.5in}
-      \hspace*{1cm}
-      \begin{figure}\flushleft
-        \includegraphics[width=4cm]{images/ida_main.eps}
-      \end{figure}
-      \hspace*{1cm}
-      \begin{figure}\flushleft
-        \includegraphics[width=2cm]{images/ida_function.eps}
-      \end{figure}
+    \begin{column}{.5\textwidth}
 
+\begin{lstlisting}[language={[x86masm]Assembler},basicstyle=\tiny\ttfamily]
+public main
+main proc near
+push ebp
+mov ebp, esp ; create stack
+and esp,0FFFFFFFF0h
+sub esp,10h ; make room for vars
+mov dword ptr[esp+4],2 ; push 2
+mov dwrod ptr[esp],1 ; push 1
+call function
+mov dword ptr [esp], offset format; "This is..."
+call _printf
+leave
+ret
+main endp
+
+public function
+function proc near
+push ebp
+mov ebp,esp ; create stack
+sub esp,20h ; make room for array
+leave
+retn 8 ; remove 2 dwords
+function endp
+\end{lstlisting}
     \end{column}
-    \begin{column}{2.5in}
-      \vspace{0.7cm}
-      {\centering\tiny Low memory addresses and top of the stack \par}
-      \begin{figure}
-        \includegraphics[width=3cm]{images/stack_after_call.eps}
-        % \caption{Visual representation of the stack after a function has been called}
 
-      \end{figure}
-      {\centering\tiny High memory addresses and Bottom of the stack\par}
+    \begin{column}{.5\textwidth}
+
+      \begin{center}
+        {\tiny Low memory addresses (top of the stack)}
+        \begin{center}
+          \begin{tikzpicture}[every
+            node/.style={font=\ttfamily\footnotesize}]
+            \node [stack,rectangle split parts=7] (s) {%
+              ...%
+              \nodepart{two}%
+              array[0]%
+              \nodepart{three}%
+              Saved EBP%
+              \nodepart{four}%
+              return address%
+              \nodepart{five}%
+              1%
+              \nodepart{six} 2%
+              \nodepart{seven}%
+              ...  };
+          \end{tikzpicture}
+        \end{center}
+        {\tiny High memory addresses (bottom of the stack)}
+      \end{center}
     \end{column}
   \end{columns}
   \begin{figure}
   \end{figure}
-
 \end{frame}
-\subsection{GDB tutorial}
+
+\subsection{GDB Tutorial}
 \begin{frame}
-  \frametitle{Our friend gdb}
+  \frametitle{Our ol' friend gdb}
   \begin{itemize}
   \item{{\bf What is GDB?}}\\
-    GDB is the GNU Project debugger, allows you to see what is going on `inside' another program while it executes -- or what another program was doing at the moment it crashed.`\footnote{http://www.gnu.org/software/gdb/}
+    GDB is GNU Project's Debugger: allows to follow, step by step, at assembler-level granularity, a running program, or what a program was doing right before it crashed.\footnote{http://www.gnu.org/software/gdb/}
   \end{itemize}
 \end{frame}
+
 \begin{frame}
   \frametitle{Start, break and navigate the execution with gdb}
   \begin{itemize}
-  \item{Suppose to have the program 'first' and you want run it into gdb }\\
+  \item{Suppose you have an executable binary and want run it}\\
     \begin{itemize}
-    \item{{\bf gdb ./first} load the binary information in gdb}
+    \item{{\bf gdb /path/to/executable} loads the binary in gdb}
     \end{itemize}
   \item{Now you decide to start the program with two parameters}\\
     \begin{itemize}
-    \item{{\bf run 1 "abc"} pass an integer as arg[1] and "abc" as arg[2]}
-    \item{{\bf run `printf "AAAAAAAAAAAA"`} in this case we're passing the output of the bash command}
+    \item{{\bf run 1 "abc"} passes 1 via \path|argv[1]| and
+        \path|"abc"| as \path|argv[2]|}
+    \item \textbf{run `printf "AAAAAAAAAAAA"`} (with the back ticks)
+      we're passing the output of the print (very useful when you need
+      to pass non printable characters such as raw bytes)
     \end{itemize}
-  \item{Suppose you want, now, to stop the execution at the address of a certain instruction}\\
+  \item{Suppose you want to stop the execution at the address of a
+      certain instruction}
     \begin{itemize}
-    \item{{\bf break *0xDEADBEAF} points a break at that address}
-    \item{{\bf break *main+1} if you have the debugging symbols this can be less painful}
+    \item{{\bf break *0xDEADBEAF} places a break point at that address}
+    \item{{\bf break *main+1} with debugging symbols this can be less painful}
     \item{{\bf catch syscall} block the execution when a syscall happens}
     \end{itemize}
   \end{itemize}
 \end{frame}
+
 \begin{frame}
   \frametitle{Start, break and navigate the execution with gdb}
   \begin{itemize}
-  \item{Now the execution has been stoped by our break point. Here we can do several things...}
-  \item{To procede we can:}
+  \item{Now the execution stops at our break point. Here we
+      can do several things}
+  \item{Examples:}
     \begin{itemize}
     \item{{\bf ni} allows to procede instruction per instruction}
-    \item{{\bf next 4} move, if you have the lines number in the binary, 4 lines ahead}
-    \item{{\bf continue} goes directly to the next breakpoint}
+    \item{{\bf next 4} moves 4 lines ahead (if you have the
+        line-numbers information in the binary)}
+    \item{{\bf continue} runs until the next break point (if any)}
     \end{itemize}
   \item{To see info about the execution state:}
     \begin{itemize}
-    \item{{\bf info registers} to see the values assumed by the registers}
-    \item{{\bf info frame} to see the values of the stack frame releted to the function where we are in}
+    \item{{\bf info registers} to inspect the content of the registers}
+    \item{{\bf info frame} to see the values of the stack frame
+        related to the function where we are in}
     \item{{\bf info file} print the information about the sections of the binary}
     \end{itemize}
   \end{itemize}
 \end{frame}
+
 \begin{frame}
   \frametitle{Navigate the stack}
   \begin{itemize}
-  \item{We are always stopped somewhere in the code and we want to evaluate the stack}
+  \item{Suppose we're stopped somewhere in the code and want to
+      inspect the stack}
   \item{Some useful view of the stack is achievable with:}
     \begin{itemize}
-    \item{{\bf x/100wx \$esp} prints 100 elements of the stack from the esp to down in exadecimal word by word form}
-    \item{{\bf x/10wo \$ebp-100} prints 10 elements of the stack from the ebp-100 to down in octal word by word form}
-    \item{{\bf x/s \$eax} prints the elements pointed by eax as string form in byte form }
+    \item{{\bf x/100wx \$esp} prints 100 words of memory from the address found in the ESP to ESP+100 (x = hexadecimal formatting)}
+    \item{{\bf x/10wo \$ebp-100} prints 10 words of memory from EBP-100 to EBP-100+10 (o = octal formatting)}
+    \item{{\bf x/s \$eax} prints the elements pointed by EAX (s = string formatting)}
     \end{itemize}
-  \item{Have you the debug symbols?}
+  \item{Do you have debug symbols? (i.e., \texttt{gcc -ggdb})}
     \begin{itemize}
     \item{{\bf print args} prints info about the main parameters}
-    \item{{\bf print a} prints the variable a value}
-    \item{{\bf print *b} prints the value pointed by b}
+    \item{{\bf print a} prints the content of variable `a'}
+    \item{{\bf print *b} prints the value pointed by `b'}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -759,14 +917,16 @@
     \item{{\bf set disassembly-flavor [intel \textpipe{}  att]}}\\
       This option sets in which predefined syntax your disassembled will be showed up. The default one is at\&t
     \end{itemize}
+  \item Highly recommended to put this
+    \url{https://github.com/gdbinit/Gdbinit} file in \path|~/.gdbinit|
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Layout in gdb}
   \begin{itemize}
-  \item{Aren't you a fun of the gdb command line?}
-  \item{Give a simple text interface to it}
+  \item{You're not a big fun of the gdb command line?}
+  \item{Give a simple text-based interface to it}
     \begin{itemize}
     \item{{\bf layout asm} turn the interface to the assembly view always visible during debugging}
     \item{{\bf layout src} if your binary has the dubugging symbols you will have your c source view visible}
@@ -775,21 +935,30 @@
     \end{itemize}
   \end{itemize}
 \end{frame}
+
 \subsection{Conclusion}
 \begin{frame}
   \frametitle{Bibliography}
   \begin{itemize}
-  \item{The Ida Pro Book 2 Edition }
-  \item{The Shellcoder Handbook}
-  \item{Reverse Engineering Code with IDA Pro}
-  \item{Secrets of Reverse Engineering}
-  \end{itemize}
-\end{frame}
-\begin{frame}
-  \frametitle{End}
-  \begin{itemize}
-  \item{Thanks Folk...Questions?}
+  \item The Ida Pro Book 2 Edition
+  \item The Shellcoder Handbook
+  \item Reverse Engineering Code with IDA Pro
+  \item Secrets of Reverse Engineering
+  \item Reverse Engineering for Beginners
   \end{itemize}
 \end{frame}
 
+\begin{frame}{End}
+  \begin{center}\Large
+    That's all folks!
+
+    Time for (more) questions!
+  \end{center}
+\end{frame}
+
 \end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
