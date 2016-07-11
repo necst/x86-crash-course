@@ -398,7 +398,7 @@
       \item{JMP \underline{\textbf{address}} or \underline{\textbf{offset}}}\\
 
       \item{Called ``unconditional jump'': sets the EIP to the address. We say that the execution ``jumps to \textbf{address}'' and it's unconditional because it always happens.}
-      \item{Using an \textbf{offest} the current EIP is incremented (or decreased) by the constant expressed by the \textbf{offest} resulting in a relative jump.}
+      \item{Using an \textbf{offset} the current EIP is incremented (or decreased) by the constant expressed by the \textbf{offset} resulting in a relative jump.}
       \end{itemize}
     \end{column}
   \end{columns}
@@ -665,7 +665,7 @@
 \begin{frame}
   \frametitle{CALL and RET Instruction}
   \begin{itemize}
-  \item{CALL {\bf func} changes the exectuion flow to the {\bf func} location. It stores return address of the instruction after the call onto the stack and moves into EIP the address of the first instruction of {\bf func}} (PUSH EIP; JMP func;)
+  \item{CALL {\bf func} changes the execution flow to the {\bf func} location. It stores return address of the instruction after the call onto the stack and moves into EIP the address of the first instruction of {\bf func}} (PUSH EIP; JMP func;)
   \item{RET {\bf value} returns to the previous function (i.e., caller). It restores return address saved by the CALL.} (POP EIP;)
   \end{itemize}
 \end{frame}
