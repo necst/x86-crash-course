@@ -665,7 +665,7 @@
 \begin{frame}
   \frametitle{CALL and RET Instruction}
   \begin{itemize}
-  \item{CALL {\bf func} changes the exectuion flow to the {\bf func} location. It stores return address of the instruction after the call onto the stack and moves into EIP the address of the first instruction of {\bf func}} (PUSH EIP; JMP func;)
+  \item{CALL {\bf func} changes the execution flow to the {\bf func} location. It stores return address of the instruction after the call onto the stack and moves into EIP the address of the first instruction of {\bf func}} (PUSH EIP; JMP func;)
   \item{RET {\bf value} returns to the previous function (i.e., caller). It restores return address saved by the CALL.} (POP EIP;)
   \end{itemize}
 \end{frame}
