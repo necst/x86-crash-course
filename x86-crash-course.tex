@@ -119,12 +119,17 @@
 \section{Crash course on Assembly Language}
 
 \begin{frame}
-  \frametitle{Assembly}
+  \frametitle{Instruction Set Architecture (ISA)}
+  Specification of Computer Architecture related to programming. Instructions, registers, memory architecture, interrupt, and etc.
   \begin{itemize}
-  \item Low-Level Language
-  \item Directly mapped with binary code
-  \item Architecture-specific: {\bf x86}, PowerPC, ARM, MIPS, ...
+    \item{{\bf x86}, x86\_64, IA-32: PCs, Servers, High-Performance, ...}
+    \item{{\bf ARM}: Mobile Devices}
+    \item{{\bf MIPS}: Routers}
+    \item{{\bf PowerPC}: Embedded and high-performance processors}
+    \item{{\bf m68k}: Very old}
+    \item{{\bf and more}}
   \end{itemize}
+
 \end{frame}
 
 \subsection{Overview on the common 32-bit Intel Architecture (IA)}
@@ -1093,6 +1098,23 @@ objdump \textbf{displays information} about one or more \textbf{object files}.
     \end{itemize}
   \item{Use {\bf CTRL+X A} to go back to standard interface.}
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{man strace}
+       In  the  simplest  case  {\bf strace}  runs the specified command until it exits.  It intercepts and
+       records the {\bf system calls} which are called by a process and the signals which are received by a
+       process.   The  name  of  each  system call, its arguments and its return value are printed on
+       standard error
+\end{frame}
+
+\begin{frame}
+  \frametitle{ltrace}
+       {\bf ltrace}  is a program that simply runs the specified command until it exits.  It intercepts and
+       records the {\bf dynamic library calls} which are called by the executed  process  and  the  signals
+       which are received by that process.  It can also intercept and print the system calls executed
+       by the program.
+
 \end{frame}
 
 \subsection{Conclusion}
