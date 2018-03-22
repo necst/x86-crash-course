@@ -91,7 +91,7 @@
   \insertframenumber\,/\,\inserttotalframenumber}
 \title{x86 Crash Course}
 \subtitle{With a focus on Linux and a glance to x86\_64}
-\author[NECSTLab]{Many contributors from the NECST Laboratory, DEIB}
+\author[NECSTLab]{Mario Polino, DEIB}
 \institute{Politecnico di Milano}
 \date{\today}
 
@@ -442,7 +442,36 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{(10) Basic Instruction NOP}
+  \frametitle{(10) Load Effective Address LEA}
+  \begin{itemize}
+  \item{LEA \underline{\textbf{destination}}, \underline{\textbf{source}}}\\
+    \textbf{source} a memory location\\
+    \textbf{destination} register\\
+
+
+  \item{Like a MOV, but it is storing the pointer not the value}
+  \item{Example: LEA eax, [ebx+8]} 
+  \end{itemize}
+
+    \begin{columns}
+      \begin{column}{0.4\columnwidth}
+          Put [ebx+8] into EAX. \textbf{EAX = 0x00403A48}. \\
+          \textbf{N.B.} \\
+          with MOV eax, [ebx+8] \\
+           EAX = 0x0012C140
+      \end{column}
+      \begin{column}{0.6\columnwidth}
+      \begin{figure}
+        \includegraphics[width=1\textwidth]{images/lea.png}
+
+        \label{Lea memory status}
+      \end{figure}
+      \end{column}
+    \end{columns}
+
+\end{frame}
+\begin{frame}
+  \frametitle{(11) Basic Instruction NOP}
   \begin{itemize}
   \item{NOP}\\
   \item{The meaning of NOP is \textbf{No Operation}. Just move to next instruction.}
@@ -453,7 +482,7 @@
 
 
 \begin{frame}
-  \frametitle{(11) Basic Instruction INT}
+  \frametitle{(12) Basic Instruction INT}
   \begin{itemize}
   \item{INT \underline{\textbf{VALUE}}}\\
   \item{\textbf{VALUE} is the software interrupt number to generate (0-255)}
@@ -464,13 +493,15 @@
 
 
 \begin{frame}
-  \frametitle{(12) Syscall/SYSENTER}
+  \frametitle{(13) Syscall/SYSENTER}
   Nowadays Syscalls are done with specific instructions.
   \begin{itemize}
   \item{syscall is used for Linux 64-bit}
   \item{SYSENTER is used by Microsoft Windows}
   \end{itemize}
 \end{frame}
+
+
 
 \subsection{x86\_64}
 \begin{frame}
