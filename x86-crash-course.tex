@@ -133,7 +133,7 @@
 			\item x86 (IA-32 and x86\_64)
 			\item ARM (mobile devices)
 			\item MIPS (embedded devices, e.g.,~consumer routers)
-			\item AVR, SPARC, Power, RISC-V, \dots
+			\item AVR, SPARC, Power, RISC V, \dots
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -141,10 +141,14 @@
 \begin{frame}{The x86 ISA}
 \begin{itemize}
 	\item Born in 1978, 16-bit ISA (Intel 8086)
-	\item Evolved in a 32-bit ISA (1985, Intel 80386) and a 64-bit ISA (2003, AMD Opteron)
+	\item Evolved to a 32-bit ISA (1985, Intel 80386)
+	\item Evolved to a 64-bit ISA (2003, AMD Opteron)
 	\item CISC design (e.g.,~string operations)
-	\item Many ``legacy'' features (e..g,~segmentation)
-	\item We'll see the ``basic'' ISA --- there are various processor-specific features and extensions, such as SIMD (MMX, SSE, \dots) with their own instructions and registers\footnote{Complete reference: Intel Software Developer's Manual, about 5,000 pages (\url{https://software.intel.com/en-us/articles/intel-sdm})}
+	\item Many legacy features (e.g,~segmentation)
+	\item We'll see the basics of the ``core'' ISA
+		\begin{itemize}
+			\item There is also the floating point unit, processor-specific features, and extensions such as SIMD (MMX, SSE, SSE2) with their own instructions and registers\footnote{Complete reference: Intel Software Developer's Manual, about 5,000 pages (\url{https://software.intel.com/en-us/articles/intel-sdm})}
+		\end{itemize}
 \end{itemize}
 \end{frame}
 
