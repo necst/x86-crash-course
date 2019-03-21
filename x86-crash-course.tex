@@ -225,7 +225,7 @@
  	\begin{figure}
     	\includegraphics[width=\linewidth]{images/asm-disasm}
   	\end{figure}
-For simplicitly, we don't deal with the \emph{linking} process.
+For simplicity, we don't deal with the \emph{linking} process.
  \end{frame}
 
 \begin{frame}{Assembly: Syntax}
@@ -842,14 +842,14 @@ ret:
 	\startframe
 	\cell{Local variables}\cellptr{{\tt ESP}} 
 	\cell{Saved {\tt EBP}}\cellptr{{\tt EBP}} \coordinate (p1) at (currentcell.east);
-	\cell{Return addr (s{\tt EIP})}
-	\cell{Arguments}
 	\finishframe{\rotatebox{90}{callee's frame}}
 	\startframe
+	\bcell{Return addr (s{\tt EIP})}
+	\bcell{Arguments}
 	\bcell{Local variables}
 	\bcell{Saved {\tt EBP}} \coordinate (p2) at (currentcell.east);
-	\bcell{Return addr (s{\tt EIP})}
 	\finishframe{\rotatebox{90}{caller's frame}}
+	\bcell{Return addr (s{\tt EIP})}
 	\stackbottom
 	\draw[->] (p1) to [bend left=90] (p2);
 	\end{tikzpicture}
