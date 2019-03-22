@@ -490,7 +490,6 @@ Assume that the input is in registers: {\tt ECX} and {\tt EDX}; output: {\tt EAX
 loop:
         cmp     ebx, 1
         jle     ret
-        xor     edx, edx
         mul     ecx
         sub     ebx, 1
         jmp     loop
