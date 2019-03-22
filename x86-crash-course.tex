@@ -1082,7 +1082,7 @@ push 3 ; push 3rd parameter
 mov edx, 2 ; move 2nd parameter in EDX
 mov ecx, 1 ; move 1st parameter in ECX
 call demo_fastcall
-add esp, 8  ; clean up the stack
+; do not clean up the stack (done by callee)
 \end{lstlisting}
 \end{frame}
 
