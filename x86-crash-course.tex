@@ -1041,7 +1041,7 @@ public function
 function proc near
 push ebp
 mov ebp,esp ; create stack
-sub esp,20h ; make room for array
+sub esp,14h ; make room for array
 leave
 retn 8 ; remove 2 dwords
 function endp
@@ -1165,7 +1165,7 @@ int main (int argc, char** argv) {
 objdump \textbf{displays information} about one or more \textbf{object files}.
   \item{\texttt{-x}} all-headers
   \item{\texttt{-d}} disassemble
-  \item{\texttt{-M intel}} intel syntax (default is att)
+  \item{\texttt{-M intel}} intel syntax (default is AT\&T)
   \end{itemize}
 \end{frame}
 
