@@ -95,7 +95,7 @@
   \insertframenumber\,/\,\inserttotalframenumber}
 \title{x86 Crash Course}
 \subtitle{With a focus on Linux and a glance to x86\_64}
-\author[NECSTLab]{Mario Polino, Marcello Pogliani}
+\author[NECSTLab]{Mario Polino}
 \institute{DEIB, Politecnico di Milano}
 \date{\today}
 
@@ -105,15 +105,15 @@
 	\titlepage
 \end{frame}
 
-\begin{frame}{Credits --- contributors as of \today}
-	\begin{itemize}
-  		\item Main contributor: Andrea Mambretti (wrote the first version)
-  		\item Mario Polino
-		\item Marcello Pogliani
-  		\item Stefano Zanero
-  		\item Federico Maggi
-  	\end{itemize}
-\end{frame}
+% \begin{frame}{Credits --- contributors as of \today}
+% 	\begin{itemize}
+%   		\item Main contributor: Andrea Mambretti (wrote the first version)
+%   		\item Mario Polino
+% 		\item Marcello Pogliani
+%   		\item Stefano Zanero
+%   		\item Federico Maggi
+%   	\end{itemize}
+% \end{frame}
 
 %\section{Crash course on x86 Assembly}
 
@@ -151,6 +151,15 @@
 		\end{itemize}
 \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Von Neumann Architecture}
+  %https://docs.google.com/drawings/d/1dDiokZZ4ba9V6rM9EnOCCIvbmxemN7DxXvL0ipsYPnE/edit?usp=sharing
+  \begin{figure}
+      \includegraphics[height=2.3in]{images/Von-Neumann-architecture.pdf}
+    \end{figure}
+\end{frame}
+
 
 \begin{frame}
 	\frametitle{IA-32: Registers}
@@ -1305,9 +1314,9 @@ objdump \textbf{displays information} about one or more \textbf{object files}.
 \end{frame}
 
 \begin{frame}[standout]
-    Thank you!
+    Let's try to write some exploit!
+    https://training.jinblack.it
 
-    (time for more questions)
 \end{frame}
 
 \end{document}
