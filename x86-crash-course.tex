@@ -12,6 +12,7 @@
 \usepackage{tikz}
 \usepackage{drawstack}
 \usepackage{booktabs}
+\usepackage{multirow}
 
 \usetikzlibrary{shapes}
 \tikzset{%
@@ -95,7 +96,7 @@
   \insertframenumber\,/\,\inserttotalframenumber}
 \title{x86 Crash Course}
 \subtitle{With a focus on Linux and a glance to x86\_64}
-\author[NECSTLab]{Mario Polino}
+\author[NECSTLab]{Mario Polino, Armando Bellante}
 \institute{DEIB, Politecnico di Milano}
 \date{\today}
 
@@ -117,6 +118,17 @@
 
 %\section{Crash course on x86 Assembly}
 
+\begin{frame}
+	\frametitle{How to Read the Matrix!}
+  \hspace*{-11mm}
+  \includegraphics[width=\paperwidth]{./images/pwndbg.png}
+\end{frame}
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{The x86 Architecture}
 \subsection{Overview on the common 32-bit Intel Architecture (IA)}
 
 \begin{frame}
@@ -534,7 +546,6 @@ ret:
   \end{itemize}
 \end{frame}
 
-
 \begin{frame}{Interrupts and Syscalls}
 
   \begin{itemize}
@@ -601,6 +612,8 @@ ret:
 %\end{frame}
 
 \section{Program Layout and Functions}
+
+\subsection{Memory Layout}
 
 \begin{frame}
   \frametitle{Binary File Formats}
@@ -686,8 +699,8 @@ ret:
     
 \end{center}
 \end{frame}
-
-\begin{frame}{The stack}
+\subsection{The Stack}
+\begin{frame}{The Stack}
 \begin{itemize}
 	\item LIFO (last in first out) data structure
 	\item Used to manage functions
@@ -760,7 +773,7 @@ ret:
 	\end{columns}
 	\end{block}
 \end{frame}
-
+\subsection{Functions}
 \begin{frame}[fragile]{Calling a function}
 	Instruction {\tt call}:
 	\begin{itemize}
@@ -921,6 +934,8 @@ Instruction {\tt leave}: restores the caller's base pointer
 \end{columns}
 \end{block}
 \end{frame}
+
+\subsection{Calling Conventions}
 
 \begin{frame}{Calling Conventions}
   \begin{itemize}
@@ -1166,6 +1181,17 @@ int main (int argc, char** argv) {
 \end{frame}
 
 \section{Tooling}
+\begin{frame}
+  \frametitle{Shell for Dummies \footnote{\texttt{cmd -{}-help} or \texttt{cmd -h} to get the aviable options}}
+  \hspace*{-11mm}
+  \includegraphics[width=\paperwidth]{./images/shell_1.pdf}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Shell for Dummies \footnote{\texttt{cmd -{}-help} or \texttt{cmd -h} to get the aviable options}}
+  \hspace*{-11mm}
+  \includegraphics[width=\paperwidth]{./images/shell_2.pdf}
+\end{frame}
 
 \begin{frame}
   \frametitle{objdump}
@@ -1185,6 +1211,31 @@ objdump \textbf{displays information} about one or more \textbf{object files}.
     GDB is GNU Project's Debugger: allows to follow, step by step, at assembler-level granularity, a running program, or what a program was doing right before it crashed.\footnote{http://www.gnu.org/software/gdb/}
   \end{itemize}
 \end{frame}
+
+
+% \begin{frame}
+%   \frametitle{Shell For Dummies}
+%   \resizebox{\linewidth}{!}{
+%   \begin{tabular}{ l l p{6cm}}
+%       \multirow{3}{3cm}{\textbf{file visualization}} & \texttt{cat file} & \#print file to stdout \\ 
+%                                                    & \texttt{less file} & \#visualize file better, q to quit \\ 
+%                                                    & \texttt{hexdump -Cv file} & \#visualize raw bytes \\ 
+%       \hline
+%       \multirow{4}{3cm}{\textbf{redirections}} & \texttt{command > file} & \#write stdout of command to file \\ 
+%                                              & \texttt{command >> file} & \#append stdout of command to file \\ 
+%                                              & \texttt{command < file} & \#use file as stdin of command \\ 
+%                                              & \texttt{cmd1 | mcd2} & \#stdout of cmd1 as stdin cmd2 \\ 
+%       \hline
+%       \multirow{2}{3cm}{\textbf{argv from command}} & \texttt{cmd \textasciigrave cmd2\textasciigrave } & \#executes cmd2 first and uses the \\ 
+%        & \texttt{cmd \$(cmd2)}    & output to eval the next command\\ 
+%       \hline
+%       \multirow{3}{3cm}{\textbf{other usefull commands}} & \texttt{command > file} & \#write stdout of command to file \\ 
+%                                              & \texttt{command >> file} & \#append stdout of command to file \\ 
+%                                              & \texttt{command < file} & \#use file as stdin of command \\ 
+
+%     \end{tabular}
+%   }
+% \end{frame}
 
 \begin{frame}
   \frametitle{Start, break and navigate the execution with gdb}
@@ -1276,19 +1327,32 @@ objdump \textbf{displays information} about one or more \textbf{object files}.
   \end{itemize}
 \end{frame}
 
+% \begin{frame}
+%   \frametitle{Layout in gdb}
+%   \begin{itemize}
+%   \item{Text-based interface for GDB}
+%     \begin{itemize}
+%     \item{{\bf layout asm} turn the interface to the assembly view always visible during debugging}
+%     \item{{\bf layout src} if your binary has the dubugging symbols you will have your c source view visible}
+%     \item{{\bf layout reg} add to the interface the register status view. It could be used in combination with one of the view described above}
+%     \item{{\bf gdb -tui ./mybin} runs gdb directly in this Text User Interface}
+%     \end{itemize}
+%   \item{Use {\bf CTRL+X A} to go back to standard interface.}
+%   \end{itemize}
+% \end{frame}
+
 \begin{frame}
-  \frametitle{Layout in gdb}
-  \begin{itemize}
-  \item{Text-based interface for GDB}
-    \begin{itemize}
-    \item{{\bf layout asm} turn the interface to the assembly view always visible during debugging}
-    \item{{\bf layout src} if your binary has the dubugging symbols you will have your c source view visible}
-    \item{{\bf layout reg} add to the interface the register status view. It could be used in combination with one of the view described above}
-    \item{{\bf gdb -tui ./mybin} runs gdb directly in this Text User Interface}
-    \end{itemize}
-  \item{Use {\bf CTRL+X A} to go back to standard interface.}
-  \end{itemize}
+  \frametitle{GDB - How to Survive \footnote{CTRL + C to Break and Debug} }
+  \hspace*{-11mm}
+  \includegraphics[width=\paperwidth]{./images/gdb_2.pdf}
 \end{frame}
+
+\begin{frame}
+  \frametitle{GDB - How to Survive \footnote{CTRL + D to Exit}}
+  \hspace*{-11mm}
+  \includegraphics[width=\paperwidth]{./images/gdb_3.pdf}
+\end{frame}
+
 
 \begin{frame}{strace}
 	\begin{itemize}
@@ -1314,9 +1378,7 @@ objdump \textbf{displays information} about one or more \textbf{object files}.
 \end{frame}
 
 \begin{frame}[standout]
-    Let's try to write some exploit!
-    https://training.jinblack.it
-
+    Questions?
 \end{frame}
 
 \end{document}
