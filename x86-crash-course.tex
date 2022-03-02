@@ -635,13 +635,16 @@ ret:
             \toprule
             \textbf{Executable}&\textbf{Description}\\
             \midrule
+            .plt& This section holds stubs which are responsible of \\
+            &external functions linking.\\\midrule
+            .text&This section holds the "text," or executable instructions, of a program.\\\midrule
+            .rodata& This section holds read-only data that contribute to \\
+            &the program's memory image\\\midrule
+            .data& This section holds initialized data that contribute to \\
+            &the program's memory image\\\midrule
             .bss&This section holds uninitialized data that contributes to the program's memory image.\\
             &By definition, the system initializes the data with zeros when the program begins to run.\\\midrule
-            .comment&This section holds version control information.\\\midrule
-            .data/.data1& These sections hold initialized data that contribute to \\
-            &the program's memory image\\\midrule
             .debug&This section holds information symbolic debugging.\\\midrule
-            .text&This section holds the "text," or executable instructions, of a program.\\\midrule
             .init&This section holds executable instructions that contribute to the process initialization code.\\
             &That is, when a program starts to run, the system arranges to execute the code in this\\
             &section before calling the main program entry point (called main for C programs).\\
