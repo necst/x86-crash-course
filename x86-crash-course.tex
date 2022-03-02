@@ -96,7 +96,7 @@
   \insertframenumber\,/\,\inserttotalframenumber}
 \title{x86 Crash Course}
 \subtitle{With a focus on Linux and a glance to x86\_64}
-\author[NECSTLab]{Mario Polino, Armando Bellante}
+\author[NECSTLab]{Mario Polino, Armando Bellante, Lorenzo Binosi}
 \institute{DEIB, Politecnico di Milano}
 \date{\today}
 
@@ -786,7 +786,7 @@ ret:
 \begin{column}{0.45\textwidth}
 	Equivalent to:
 	\begin{itemize}
-		\item \alert<2>{\tt push eip}
+		\item \alert<2>{\tt push address(of the instruction after the call!)}
 		\item \alert<3>{\tt jmp func}
 	\end{itemize}
 	(reminder: we can't read or set {\tt EIP} directly!)
@@ -795,7 +795,7 @@ ret:
 	{\scriptsize Low addresses ({\tt 0x80000000})}\\[.5em]
 	\begin{drawstack}[scale=0.7, font=\footnotesize]
 	\cell{}
-	\cell{\only<2->{0x8001020}}\only<2->{\cellptr{\tt ESP}}
+	\cell{\only<2->{0x8001025}}\only<2->{\cellptr{\tt ESP}}
 	\bcell{Stack top}\only<-1>{\cellptr{\tt ESP}}
 	\end{drawstack}
 	{\scriptsize High addresses ({\tt 0xbfffffff})}
@@ -825,11 +825,11 @@ ret:
 	{\scriptsize Low addresses ({\tt 0x80000000})}\\[.5em]
 	\begin{drawstack}[scale=0.7, font=\footnotesize]
 	\cell{}
-	\cell{\only<-1>{0x8001020}}\only<-1>{\cellptr{\tt ESP}}
+	\cell{\only<-1>{0x8001025}}\only<-1>{\cellptr{\tt ESP}}
 	\bcell{Stack top}\only<2->{\cellptr{\tt ESP}}
 	\end{drawstack}
 	{\scriptsize High addresses ({\tt 0xbfffffff})}
-	\only<2->{EIP = 0x8001020}
+	\only<2->{EIP = 0x8001025}
 	\only<-1>{EIP = 0x800bff00}
 \end{column}
 \end{columns}
@@ -895,7 +895,7 @@ ret:
 	\begin{drawstack}[scale=0.7, font=\footnotesize]
 	\startframe
 	\cell{\only<2->{Saved EBP}}\only<2->{\cellptr{\tt ESP}}\only<3->{\cellptr{\tt EBP}}
-	\cell{0x8001020}\only<1>{\cellptr{\tt ESP}}
+	\cell{0x8001025}\only<1>{\cellptr{\tt ESP}}
 	\finishframe{\rotatebox{90}{{\tt func}'s frame}}
 	\bcell{\dots}
 	\bcell{caller's sEBP}\only<-2>{\cellptr{\tt EBP}}
@@ -924,7 +924,7 @@ Instruction {\tt leave}: restores the caller's base pointer
 	\startframe
 	\cell{(... locals ...)}\only<1>{\cellptr{\tt ESP}}
 	\cell{{Saved EBP}}\only<-2>{\cellptr{\tt EBP}}\only<2>{\cellptr{\tt ESP}}
-	\cell{0x8001020}\only<3->{\cellptr{\tt ESP}}
+	\cell{0x8001025}\only<3->{\cellptr{\tt ESP}}
 	\finishframe{\rotatebox{90}{{\tt func}'s frame}}
 	\bcell{\dots}
 	\bcell{caller's sEBP}\only<3>{\cellptr{\tt EBP}}
