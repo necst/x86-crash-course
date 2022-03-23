@@ -94,7 +94,7 @@
 \renewcommand*\insertshorttitle{%
   \oldmacro\hfill%
   \insertframenumber\,/\,\inserttotalframenumber}
-\title{x86 Crash Course}
+\title{How to Read the Matrix -- x86 Crash Course}
 \subtitle{With a focus on Linux and a glance to x86\_64}
 \author[NECSTLab]{Mario Polino, Armando Bellante}
 \institute{DEIB, Politecnico di Milano}
@@ -120,13 +120,25 @@
 
 \begin{frame}
 	\frametitle{How to Read the Matrix!}
-  \hspace*{-11mm}
-  \includegraphics[width=\paperwidth]{./images/pwndbg.png}
+  \centering
+  \includegraphics[width=0.75\paperwidth]{./images/pwndbg_small.png}
 \end{frame}
+
 \begin{frame}
   \frametitle{Outline}
   \tableofcontents
 \end{frame}
+
+\begin{frame}{Assembly and Machine Code}
+ 
+  Assembly language: specific to each ISA, mapped to binary code
+  
+    \begin{figure}
+       \includegraphics[width=\linewidth]{images/asm-disasm}
+     \end{figure}
+ For simplicity, we don't deal with the \emph{linking} process.
+  \end{frame}
+ 
 
 \section{The x86 Architecture}
 \subsection{Overview on the common 32-bit Intel Architecture (IA)}
@@ -239,15 +251,6 @@
 
  \end{frame}
  
- \begin{frame}{Assembly and Machine Code}
- 
- Assembly language: specific to each ISA, mapped to binary code
- 
- 	\begin{figure}
-    	\includegraphics[width=\linewidth]{images/asm-disasm}
-  	\end{figure}
-For simplicity, we don't deal with the \emph{linking} process.
- \end{frame}
 
 \begin{frame}{Assembly: Syntax}
 	Two main syntaxes:
@@ -271,7 +274,7 @@ For simplicity, we don't deal with the \emph{linking} process.
 		\emph{move the value 0 to the address contained in \texttt{EBX}+4}
 		\par\vskip 0.8em\begin{tabular}{ccc}
       		\textbf{Intel} & $\qquad$ & \textbf{AT\&T} \\
-		\texttt{mov [ebx+4h],0h} & & \texttt{movl \$0x0,0x4(\%ebx)}\end{tabular}
+		\texttt{mov \textcolor{gray}{DWORD PTR} [ebx+4h],0h} & & \texttt{movl \$0x0,0x4(\%ebx)}\end{tabular}
 	\end{center}
 \end{frame}
 
@@ -566,6 +569,13 @@ ret:
 \end{frame}
 
 \begin{frame}
+	\frametitle{Let's Read the Matrix!}
+  \centering
+  \includegraphics[width=0.75\paperwidth]{./images/pwndbg_small.png}
+\end{frame}
+
+
+\begin{frame}
   \frametitle{Endianness}
   \textbf{Endianness}: convention that specifies in which order the bytes of a data word are lined up sequentially in memory.
   \begin{block}{Big-endian (left)}
@@ -611,7 +621,7 @@ ret:
 %  \end{columns}
 %\end{frame}
 
-\section{Program Layout and Functions}
+\section{Program Layout}
 
 \subsection{Memory Layout}
 
@@ -699,6 +709,7 @@ ret:
     
 \end{center}
 \end{frame}
+
 \subsection{The Stack}
 \begin{frame}{The Stack}
 \begin{itemize}
@@ -773,7 +784,7 @@ ret:
 	\end{columns}
 	\end{block}
 \end{frame}
-\subsection{Functions}
+\section{Functions}
 \begin{frame}[fragile]{Calling a function}
 	Instruction {\tt call}:
 	\begin{itemize}
@@ -1178,6 +1189,12 @@ int main (int argc, char** argv) {
 	\end{center}
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Let's Read the Matrix!}
+  \centering
+  \includegraphics[width=0.75\paperwidth]{./images/pwndbg_small.png}
 \end{frame}
 
 \section{Tooling}
